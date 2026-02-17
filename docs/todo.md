@@ -215,25 +215,25 @@
 ## Phase 11: New Features
 
 ### Math Preliminaries enhancements
-- [ ] Custom function input for IVT visualizer (user-defined f(x))
-- [ ] Custom function input for MVT visualizer
-- [ ] MVT for integrals (separate subsection)
-- [ ] Taylor polynomial calculator with custom center point + degree
-- [ ] Taylor error bound computation
+- [x] Custom function input for IVT visualizer (user-defined f(x))
+- [x] Custom function input for MVT visualizer
+- [x] MVT for integrals (separate subsection)
+- [x] Taylor polynomial calculator with custom center point + degree
+- [x] Taylor error bound computation
 
 ### Error Analysis enhancements
-- [ ] Condition number calculator
-  - [ ] Theory card with KaTeX formulas
-  - [ ] Input f(x) and x, compute condition number
-  - [ ] Visualize well-conditioned vs ill-conditioned functions
-- [ ] Series convergence/divergence analyzer
-  - [ ] Input a series formula
-  - [ ] Compute partial sums
-  - [ ] Determine convergence + sum if applicable
+- [x] Condition number calculator
+  - [x] Theory card with KaTeX formulas
+  - [x] Input f(x) and x, compute condition number
+  - [x] Visualize well-conditioned vs ill-conditioned functions
+- [x] Series convergence/divergence analyzer
+  - [x] Input a series formula
+  - [x] Compute partial sums
+  - [x] Determine convergence + sum if applicable
 
 ### Additional topics
-- [ ] Limits proof helper (epsilon-delta visualization)
-- [ ] Floating-point arithmetic proof walkthrough (fl(x) = (1-ε)x)
+- [x] Limits proof helper (epsilon-delta visualization)
+- [x] Floating-point arithmetic proof walkthrough (fl(x) = (1-ε)x)
 
 ## Decisions
 

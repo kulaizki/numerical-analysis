@@ -4,7 +4,10 @@
     ErrorCalculator,
     ErrorPractice,
     ConvergenceChart,
-    SequenceAnalyzer
+    SequenceAnalyzer,
+    ConditionNumber,
+    SeriesAnalyzer,
+    FloatingPointProof
   } from '$lib/features/error-analysis';
 </script>
 
@@ -25,8 +28,23 @@
   <ErrorPractice />
 </section>
 
-<section class="mb-12">
+<section class="mb-12 border-b border-border pb-12">
   <h2 class="text-xl font-bold text-primary mb-4">3. Convergence Rates</h2>
   <ConvergenceChart />
   <SequenceAnalyzer />
+</section>
+
+<section class="mb-12 border-b border-border pb-12">
+  <h2 class="text-xl font-bold text-primary mb-4">4. Condition Numbers</h2>
+  <ConditionNumber />
+</section>
+
+<section class="mb-12 border-b border-border pb-12">
+  <h2 class="text-xl font-bold text-primary mb-4">5. Series Convergence</h2>
+  <SeriesAnalyzer />
+</section>
+
+<section class="mb-12">
+  <h2 class="text-xl font-bold text-primary mb-4">6. Floating-Point Arithmetic</h2>
+  <FloatingPointProof />
 </section>

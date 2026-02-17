@@ -2,21 +2,117 @@
   import KaTeX from '$lib/components/KaTeX.svelte';
   import { Card, Button } from '$lib/components/ui';
 
+  // ─── State ────────────────────────────────────────────────────────────────
   let show = $state(true);
 
   let mvtC = $state(0);
   let mvtCanvas: HTMLCanvasElement | undefined = $state();
 
-  function mvtFunction(x: number): number {
+  const DEFAULT_EXPR = 'x^3 - 3*x + 1';
+  const PRESETS = ['x^3 - 3*x + 1', 'sin(x)', 'x^2', 'cos(x) + x'];
+
+  let rawExpr = $state(DEFAULT_EXPR);
+  let parseError = $state('');
+
+  // Interval [a, b]
+  let intervalA = $state(-2);
+  let intervalB = $state(2);
+
+  // ─── Function parser ──────────────────────────────────────────────────────
+  /**
+   * Compile a math expression string into a JS function f(x).
+   * Supports: +, -, *, /, ^, sin, cos, tan, sqrt, abs, exp, log, ln, pi, e, ()
+   */
+  function compileExpression(expr: string): (x: number) => number {
+    let e = expr.trim();
+
+    // Replace common constants
+    e = e.replace(/\bpi\b/gi, '(Math.PI)');
+    // Replace standalone 'e' not part of a word (e.g. not 'exp')
+    e = e.replace(/(?<![a-zA-Z])e(?![a-zA-Z])/g, '(Math.E)');
+
+    // Replace math functions (order matters: longer names first)
+    e = e.replace(/\bsqrt\b/gi, 'Math.sqrt');
+    e = e.replace(/\babs\b/gi, 'Math.abs');
+    e = e.replace(/\bexp\b/gi, 'Math.exp');
+    e = e.replace(/\bsin\b/gi, 'Math.sin');
+    e = e.replace(/\bcos\b/gi, 'Math.cos');
+    e = e.replace(/\btan\b/gi, 'Math.tan');
+    e = e.replace(/\bln\b/gi, 'Math.log');
+    e = e.replace(/\blog\b/gi, 'Math.log10');
+
+    // Replace ^ with **
+    e = e.replace(/\^/g, '**');
+
+    // Validate: strip allowed tokens and check nothing suspicious remains
+    const stripped = e
+      .replace(/Math\.\w+/g, '')
+      .replace(/[0-9x().+\-*/%\s]/g, '');
+    if (stripped.length > 0) {
+      throw new Error(`Invalid characters: "${stripped}"`);
+    }
+
+    // eslint-disable-next-line no-new-func
+    const fn = new Function('x', `"use strict"; return (${e});`) as (x: number) => number;
+
+    // Smoke-test
+    const testVal = fn(1);
+    if (typeof testVal !== 'number') {
+      throw new Error('Expression did not return a number');
+    }
+
+    return fn;
+  }
+
+  // ─── Derived parsed function ──────────────────────────────────────────────
+  let parsedFn: ((x: number) => number) | null = $derived.by(() => {
+    try {
+      return compileExpression(rawExpr);
+    } catch {
+      return null;
+    }
+  });
+
+  // Update error message reactively
+  $effect(() => {
+    try {
+      compileExpression(rawExpr);
+      parseError = '';
+    } catch (err) {
+      parseError = err instanceof Error ? err.message : 'Invalid expression';
+    }
+  });
+
+  // ─── Numerical derivative (central difference) ────────────────────────────
+  const H = 0.0001;
+
+  function numericalDerivative(fn: (x: number) => number, x: number): number {
+    return (fn(x + H) - fn(x - H)) / (2 * H);
+  }
+
+  // ─── Active function (fallback to default on parse error) ─────────────────
+  function defaultFn(x: number): number {
     return x * x * x - 3 * x + 1;
   }
 
-  function mvtDerivative(x: number): number {
-    return 3 * x * x - 3;
-  }
+  let activeFn = $derived(parsedFn ?? defaultFn);
 
+  // ─── Keep c within [a, b] when interval changes ───────────────────────────
+  $effect(() => {
+    if (mvtC < intervalA) mvtC = intervalA;
+    if (mvtC > intervalB) mvtC = intervalB;
+  });
+
+  // ─── Canvas rendering ──────────────────────────────────────────────────────
   $effect(() => {
     if (!mvtCanvas) return;
+
+    // Capture all reactive dependencies explicitly
+    const fn = activeFn;
+    const a = intervalA;
+    const b = intervalB;
+    const c = mvtC;
+
     const ctx = mvtCanvas.getContext('2d');
     if (!ctx) return;
 
@@ -28,16 +124,58 @@
 
     const width = rect.width;
     const height = rect.height;
-    const xMin = -2.5;
-    const xMax = 2.5;
-    const yMin = -4;
-    const yMax = 4;
+
+    // Auto-fit viewport around [a, b]
+    const margin = Math.max((b - a) * 0.3, 0.5);
+    const xMin = a - margin;
+    const xMax = b + margin;
+
+    // Sample y to auto-scale
+    const samples: number[] = [];
+    const steps = 300;
+    for (let i = 0; i <= steps; i++) {
+      const x = xMin + (i / steps) * (xMax - xMin);
+      try {
+        const y = fn(x);
+        if (isFinite(y)) samples.push(y);
+      } catch { /* skip */ }
+    }
+
+    let yMin: number, yMax: number;
+    if (samples.length === 0) {
+      yMin = -4; yMax = 4;
+    } else {
+      const rawYMin = Math.min(...samples);
+      const rawYMax = Math.max(...samples);
+      const yRange = rawYMax - rawYMin || 4;
+      const yPad = yRange * 0.25;
+      yMin = rawYMin - yPad;
+      yMax = rawYMax + yPad;
+    }
 
     ctx.fillStyle = '#18181b';
     ctx.fillRect(0, 0, width, height);
 
     const toCanvasX = (x: number) => ((x - xMin) / (xMax - xMin)) * width;
     const toCanvasY = (y: number) => height - ((y - yMin) / (yMax - yMin)) * height;
+
+    // Grid
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 0.5;
+    const xTickStep = (xMax - xMin) / 10;
+    for (let x = Math.ceil(xMin / xTickStep) * xTickStep; x <= xMax + 1e-9; x += xTickStep) {
+      ctx.beginPath();
+      ctx.moveTo(toCanvasX(x), 0);
+      ctx.lineTo(toCanvasX(x), height);
+      ctx.stroke();
+    }
+    const yTickStep = (yMax - yMin) / 8;
+    for (let y = Math.ceil(yMin / yTickStep) * yTickStep; y <= yMax + 1e-9; y += yTickStep) {
+      ctx.beginPath();
+      ctx.moveTo(0, toCanvasY(y));
+      ctx.lineTo(width, toCanvasY(y));
+      ctx.stroke();
+    }
 
     // Axes
     ctx.strokeStyle = '#27272a';
@@ -49,87 +187,76 @@
     ctx.lineTo(toCanvasX(0), height);
     ctx.stroke();
 
-    // Grid
-    ctx.strokeStyle = '#1e293b';
-    ctx.lineWidth = 0.5;
-    for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
-      ctx.beginPath();
-      ctx.moveTo(toCanvasX(x), 0);
-      ctx.lineTo(toCanvasX(x), height);
-      ctx.stroke();
-    }
-    for (let y = Math.ceil(yMin); y <= Math.floor(yMax); y++) {
-      ctx.beginPath();
-      ctx.moveTo(0, toCanvasY(y));
-      ctx.lineTo(width, toCanvasY(y));
-      ctx.stroke();
-    }
-
-    // Draw function
+    // Function curve
     ctx.strokeStyle = '#818cf8';
     ctx.lineWidth = 2;
     ctx.beginPath();
+    let penDown = false;
     for (let px = 0; px <= width; px++) {
       const x = xMin + (px / width) * (xMax - xMin);
-      const y = mvtFunction(x);
+      let y: number;
+      try { y = fn(x); } catch { penDown = false; continue; }
+      if (!isFinite(y)) { penDown = false; continue; }
       const py = toCanvasY(y);
-      if (px === 0) ctx.moveTo(px, py);
+      if (!penDown) { ctx.moveTo(px, py); penDown = true; }
       else ctx.lineTo(px, py);
     }
     ctx.stroke();
 
-    // Endpoints for MVT demonstration
-    const a = -2;
-    const b = 2;
-    const fA = mvtFunction(a);
-    const fB = mvtFunction(b);
-    const slope = (fB - fA) / (b - a);
+    // Clamp c to [a, b]
+    const cClamped = Math.max(a, Math.min(b, c));
 
-    // Draw secant line
-    ctx.strokeStyle = '#a1a1aa';
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([5, 5]);
-    ctx.beginPath();
-    const secY1 = fA + slope * (xMin - a);
-    const secY2 = fA + slope * (xMax - a);
-    ctx.moveTo(toCanvasX(xMin), toCanvasY(secY1));
-    ctx.lineTo(toCanvasX(xMax), toCanvasY(secY2));
-    ctx.stroke();
-    ctx.setLineDash([]);
+    let fA: number, fB: number;
+    try { fA = fn(a); fB = fn(b); } catch { fA = NaN; fB = NaN; }
 
-    // Draw endpoints
-    ctx.fillStyle = '#a1a1aa';
-    ctx.beginPath();
-    ctx.arc(toCanvasX(a), toCanvasY(fA), 5, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(toCanvasX(b), toCanvasY(fB), 5, 0, 2 * Math.PI);
-    ctx.fill();
+    if (isFinite(fA) && isFinite(fB)) {
+      const slope = (fB - fA) / (b - a);
 
-    // Draw tangent line at c
-    const fC = mvtFunction(mvtC);
-    const fPrimeC = mvtDerivative(mvtC);
+      // Secant line
+      ctx.strokeStyle = '#a1a1aa';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(toCanvasX(xMin), toCanvasY(fA + slope * (xMin - a)));
+      ctx.lineTo(toCanvasX(xMax), toCanvasY(fA + slope * (xMax - a)));
+      ctx.stroke();
+      ctx.setLineDash([]);
 
-    ctx.strokeStyle = '#10b981';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    const tanY1 = fC + fPrimeC * (xMin - mvtC);
-    const tanY2 = fC + fPrimeC * (xMax - mvtC);
-    ctx.moveTo(toCanvasX(xMin), toCanvasY(tanY1));
-    ctx.lineTo(toCanvasX(xMax), toCanvasY(tanY2));
-    ctx.stroke();
+      // Endpoints
+      ctx.fillStyle = '#a1a1aa';
+      ctx.beginPath();
+      ctx.arc(toCanvasX(a), toCanvasY(fA), 5, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(toCanvasX(b), toCanvasY(fB), 5, 0, 2 * Math.PI);
+      ctx.fill();
 
-    // Draw point c
-    ctx.fillStyle = '#10b981';
-    ctx.beginPath();
-    ctx.arc(toCanvasX(mvtC), toCanvasY(fC), 6, 0, 2 * Math.PI);
-    ctx.fill();
+      // Tangent at c
+      let fC: number, fPrimeC: number;
+      try { fC = fn(cClamped); fPrimeC = numericalDerivative(fn, cClamped); }
+      catch { fC = NaN; fPrimeC = NaN; }
 
-    // Labels
-    ctx.fillStyle = '#fff';
-    ctx.font = '12px monospace';
-    ctx.fillText(`Secant slope: ${slope.toFixed(2)}`, 10, 20);
-    ctx.fillText(`f'(c) at c=${mvtC.toFixed(2)}: ${fPrimeC.toFixed(2)}`, 10, 40);
+      if (isFinite(fC) && isFinite(fPrimeC)) {
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(toCanvasX(xMin), toCanvasY(fC + fPrimeC * (xMin - cClamped)));
+        ctx.lineTo(toCanvasX(xMax), toCanvasY(fC + fPrimeC * (xMax - cClamped)));
+        ctx.stroke();
+
+        // Point c
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.arc(toCanvasX(cClamped), toCanvasY(fC), 6, 0, 2 * Math.PI);
+        ctx.fill();
+
+        // Labels
+        ctx.fillStyle = '#fff';
+        ctx.font = '12px monospace';
+        ctx.fillText(`Secant slope: ${slope.toFixed(3)}`, 10, 20);
+        ctx.fillText(`f'(c) at c=${cClamped.toFixed(2)}: ${fPrimeC.toFixed(3)}`, 10, 40);
+      }
+    }
   });
 </script>
 
@@ -143,6 +270,7 @@
 
   {#if show}
     <Card class="space-y-4">
+      <!-- Theorem statements -->
       <div>
         <h3 class="text-sm font-semibold text-primary mb-2">Theorem Statements</h3>
 
@@ -167,10 +295,77 @@
         </p>
       </div>
 
+      <!-- Custom function input -->
+      <div>
+        <h3 class="text-sm font-semibold text-primary mb-2">Custom Function</h3>
+
+        <div class="flex flex-wrap gap-2 mb-3">
+          {#each PRESETS as preset}
+            <Button
+              variant="outline"
+              size="sm"
+              onclick={() => { rawExpr = preset; }}
+            >
+              {preset}
+            </Button>
+          {/each}
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label class="text-xs text-muted" for="fn-input">f(x) =</label>
+          <input
+            id="fn-input"
+            type="text"
+            bind:value={rawExpr}
+            placeholder="e.g. x^3 - 3*x + 1"
+            class="bg-bg text-primary border border-border-strong px-3 py-2 text-sm font-mono focus:outline-none focus:border-accent"
+          />
+          {#if parseError}
+            <p class="text-error text-xs">{parseError}</p>
+          {/if}
+          <p class="text-xs text-muted">
+            Supported: <span class="font-mono">+  -  *  /  ^  sin  cos  tan  sqrt  abs  exp  log  ln  pi  e  ( )</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Interval controls -->
+      <div>
+        <h3 class="text-sm font-semibold text-primary mb-3">Interval [a, b]</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <label class="block text-xs text-muted" for="slider-a">
+            a = {intervalA.toFixed(2)}
+            <input
+              id="slider-a"
+              type="range"
+              min="-10"
+              max="-0.1"
+              step="0.1"
+              bind:value={intervalA}
+              class="w-full mt-1"
+            />
+          </label>
+          <label class="block text-xs text-muted" for="slider-b">
+            b = {intervalB.toFixed(2)}
+            <input
+              id="slider-b"
+              type="range"
+              min="0.1"
+              max="10"
+              step="0.1"
+              bind:value={intervalB}
+              class="w-full mt-1"
+            />
+          </label>
+        </div>
+      </div>
+
+      <!-- Canvas -->
       <div>
         <h3 class="text-sm font-semibold text-primary mb-3">Interactive Visualization</h3>
         <p class="text-xs text-muted mb-3">
-          Function: <KaTeX math="f(x) = x^3 - 3x + 1" /> on <KaTeX math="[-2, 2]" />. Adjust c to find where the tangent is parallel to the secant.
+          Adjust <KaTeX math="c" /> to find where the tangent line is parallel to the secant.
+          Derivative computed numerically via central difference: <KaTeX math={"f'(x) \\approx \\frac{f(x+h)-f(x-h)}{2h}"} />.
         </p>
 
         <div class="w-full overflow-x-auto">
@@ -182,15 +377,17 @@
         </div>
 
         <div class="mt-4">
-          <label class="block text-xs text-muted mb-2">c = {mvtC.toFixed(2)}
-          <input
-            type="range"
-            min="-2"
-            max="2"
-            step="0.05"
-            bind:value={mvtC}
-            class="w-full"
-          />
+          <label class="block text-xs text-muted mb-2" for="slider-c">
+            c = {mvtC.toFixed(2)}
+            <input
+              id="slider-c"
+              type="range"
+              min={intervalA}
+              max={intervalB}
+              step="0.05"
+              bind:value={mvtC}
+              class="w-full"
+            />
           </label>
         </div>
 

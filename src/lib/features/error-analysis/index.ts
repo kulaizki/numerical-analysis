@@ -3,5 +3,8 @@ export {
   ErrorCalculator,
   ErrorPractice,
   ConvergenceChart,
-  SequenceAnalyzer
+  SequenceAnalyzer,
+  ConditionNumber,
+  SeriesAnalyzer,
+  FloatingPointProof
 } from './components';

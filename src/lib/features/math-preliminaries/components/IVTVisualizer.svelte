@@ -9,8 +9,73 @@
   let ivtB = $state(1.5);
   let ivtCanvas: HTMLCanvasElement | undefined = $state();
 
+  // Custom function input state
+  const DEFAULT_EXPR = 'x^3 - x - 2';
+  let funcExpr = $state(DEFAULT_EXPR);
+  let funcError = $state('');
+
+  const PRESETS = [
+    { label: 'x\u00b3 - x - 2', expr: 'x^3 - x - 2' },
+    { label: 'sin(x) - x/2', expr: 'sin(x) - x/2' },
+    { label: 'x\u00b2 - 4', expr: 'x^2 - 4' },
+    { label: 'cos(x) - x', expr: 'cos(x) - x' }
+  ];
+
+  function compileExpr(expr: string): ((x: number) => number) | null {
+    let s = expr.trim().toLowerCase();
+    s = s
+      .replace(/\bpi\b/g, 'Math.PI')
+      .replace(/\be\b/g, 'Math.E')
+      .replace(/\bsin\b/g, 'Math.sin')
+      .replace(/\bcos\b/g, 'Math.cos')
+      .replace(/\btan\b/g, 'Math.tan')
+      .replace(/\bsqrt\b/g, 'Math.sqrt')
+      .replace(/\babs\b/g, 'Math.abs')
+      .replace(/\bexp\b/g, 'Math.exp')
+      .replace(/\bln\b/g, 'Math.log')
+      .replace(/\blog\b/g, 'Math.log10');
+    s = s.replace(/\^/g, '**');
+    try {
+      const fn = new Function('x', `"use strict"; return (${s});`) as (x: number) => number;
+      fn(1);
+      return fn;
+    } catch {
+      return null;
+    }
+  }
+
+  let compiledFn: (x: number) => number = $state((x: number) => x * x * x - x - 2);
+
+  function applyExpr(expr: string) {
+    const fn = compileExpr(expr);
+    if (fn === null) {
+      funcError = 'Invalid expression -- using last valid function.';
+    } else {
+      compiledFn = fn;
+      funcError = '';
+    }
+  }
+
   function ivtFunction(x: number): number {
-    return x * x * x - x - 2;
+    try {
+      const v = compiledFn(x);
+      return isFinite(v) ? v : NaN;
+    } catch {
+      return NaN;
+    }
+  }
+
+  function handleExprInput(e: Event) {
+    funcExpr = (e.target as HTMLInputElement).value;
+  }
+
+  function handleExprKeydown(e: KeyboardEvent) {
+    if (e.key === 'Enter') applyExpr(funcExpr);
+  }
+
+  function selectPreset(expr: string) {
+    funcExpr = expr;
+    applyExpr(expr);
   }
 
   $effect(() => {
@@ -31,25 +96,12 @@
     const yMin = -6;
     const yMax = 6;
 
-    // Clear canvas
     ctx.fillStyle = '#18181b';
     ctx.fillRect(0, 0, width, height);
 
-    // Transform helpers
     const toCanvasX = (x: number) => ((x - xMin) / (xMax - xMin)) * width;
     const toCanvasY = (y: number) => height - ((y - yMin) / (yMax - yMin)) * height;
 
-    // Draw axes
-    ctx.strokeStyle = '#27272a';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(0, toCanvasY(0));
-    ctx.lineTo(width, toCanvasY(0));
-    ctx.moveTo(toCanvasX(0), 0);
-    ctx.lineTo(toCanvasX(0), height);
-    ctx.stroke();
-
-    // Draw grid
     ctx.strokeStyle = '#1e293b';
     ctx.lineWidth = 0.5;
     for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
@@ -65,38 +117,60 @@
       ctx.stroke();
     }
 
-    // Draw function
+    ctx.strokeStyle = '#27272a';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, toCanvasY(0));
+    ctx.lineTo(width, toCanvasY(0));
+    ctx.moveTo(toCanvasX(0), 0);
+    ctx.lineTo(toCanvasX(0), height);
+    ctx.stroke();
+
     ctx.strokeStyle = '#818cf8';
     ctx.lineWidth = 2;
     ctx.beginPath();
+    let penDown = false;
     for (let px = 0; px <= width; px++) {
       const x = xMin + (px / width) * (xMax - xMin);
       const y = ivtFunction(x);
       const py = toCanvasY(y);
-      if (px === 0) ctx.moveTo(px, py);
-      else ctx.lineTo(px, py);
+      if (!isFinite(y) || py < -height || py > 2 * height) {
+        penDown = false;
+        continue;
+      }
+      if (!penDown) {
+        ctx.moveTo(px, py);
+        penDown = true;
+      } else {
+        ctx.lineTo(px, py);
+      }
     }
     ctx.stroke();
 
-    // Highlight interval [a, b]
     const fA = ivtFunction(ivtA);
     const fB = ivtFunction(ivtB);
 
-    // Draw vertical lines at a and b
-    ctx.strokeStyle = '#a1a1aa';
-    ctx.lineWidth = 2;
-    ctx.setLineDash([5, 5]);
-    ctx.beginPath();
-    ctx.moveTo(toCanvasX(ivtA), toCanvasY(0));
-    ctx.lineTo(toCanvasX(ivtA), toCanvasY(fA));
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(toCanvasX(ivtB), toCanvasY(0));
-    ctx.lineTo(toCanvasX(ivtB), toCanvasY(fB));
-    ctx.stroke();
-    ctx.setLineDash([]);
+    if (isFinite(fA)) {
+      ctx.strokeStyle = '#a1a1aa';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(toCanvasX(ivtA), toCanvasY(0));
+      ctx.lineTo(toCanvasX(ivtA), toCanvasY(fA));
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    if (isFinite(fB)) {
+      ctx.strokeStyle = '#a1a1aa';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(toCanvasX(ivtB), toCanvasY(0));
+      ctx.lineTo(toCanvasX(ivtB), toCanvasY(fB));
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
 
-    // Draw horizontal line at y=0
     ctx.strokeStyle = '#f59e0b';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
@@ -104,23 +178,26 @@
     ctx.lineTo(width, toCanvasY(0));
     ctx.stroke();
 
-    // Draw points at f(a) and f(b)
-    ctx.fillStyle = '#a1a1aa';
-    ctx.beginPath();
-    ctx.arc(toCanvasX(ivtA), toCanvasY(fA), 5, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(toCanvasX(ivtB), toCanvasY(fB), 5, 0, 2 * Math.PI);
-    ctx.fill();
+    if (isFinite(fA)) {
+      ctx.fillStyle = '#a1a1aa';
+      ctx.beginPath();
+      ctx.arc(toCanvasX(ivtA), toCanvasY(fA), 5, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+    if (isFinite(fB)) {
+      ctx.fillStyle = '#a1a1aa';
+      ctx.beginPath();
+      ctx.arc(toCanvasX(ivtB), toCanvasY(fB), 5, 0, 2 * Math.PI);
+      ctx.fill();
+    }
 
-    // If opposite signs, highlight root region
-    if (fA * fB < 0) {
-      // Approximate root using bisection (few iterations)
+    if (isFinite(fA) && isFinite(fB) && fA * fB < 0) {
       let left = ivtA;
       let right = ivtB;
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 40; i++) {
         const mid = (left + right) / 2;
         const fMid = ivtFunction(mid);
+        if (!isFinite(fMid)) break;
         if (fMid * ivtFunction(left) < 0) right = mid;
         else left = mid;
       }
@@ -132,16 +209,18 @@
       ctx.fill();
     }
 
-    // Labels
     ctx.fillStyle = '#a1a1aa';
     ctx.font = '12px monospace';
-    ctx.fillText(`a=${ivtA.toFixed(1)}`, toCanvasX(ivtA) - 20, toCanvasY(0) + 20);
-    ctx.fillText(`b=${ivtB.toFixed(1)}`, toCanvasX(ivtB) - 20, toCanvasY(0) + 20);
-    ctx.fillText(`f(a)=${fA.toFixed(2)}`, toCanvasX(ivtA) + 10, toCanvasY(fA));
-    ctx.fillText(`f(b)=${fB.toFixed(2)}`, toCanvasX(ivtB) + 10, toCanvasY(fB));
+    if (isFinite(fA)) {
+      ctx.fillText(`a=${ivtA.toFixed(1)}`, toCanvasX(ivtA) - 20, toCanvasY(0) + 20);
+      ctx.fillText(`f(a)=${fA.toFixed(2)}`, toCanvasX(ivtA) + 10, toCanvasY(fA));
+    }
+    if (isFinite(fB)) {
+      ctx.fillText(`b=${ivtB.toFixed(1)}`, toCanvasX(ivtB) - 20, toCanvasY(0) + 20);
+      ctx.fillText(`f(b)=${fB.toFixed(2)}`, toCanvasX(ivtB) + 10, toCanvasY(fB));
+    }
   });
 
-  // IVT Practice
   let ivtAnswer = $state('');
   let ivtFeedback = $state('');
 
@@ -177,8 +256,43 @@
 
       <div>
         <h3 class="text-sm font-semibold text-primary mb-3">Interactive Visualization</h3>
+
+        <div class="mb-4 space-y-2">
+          <label class="block text-xs text-muted mb-1">
+            Custom function <span class="text-tertiary">(press Enter or Apply)</span>
+          </label>
+          <div class="flex gap-2">
+            <input
+              type="text"
+              value={funcExpr}
+              oninput={handleExprInput}
+              onkeydown={handleExprKeydown}
+              placeholder="e.g. x^3 - x - 2"
+              class="flex-1 bg-bg text-primary border border-border-strong px-3 py-2 text-sm font-mono focus:outline-none focus:border-accent"
+            />
+            <Button variant="outline" size="sm" onclick={() => applyExpr(funcExpr)}>
+              Apply
+            </Button>
+          </div>
+          {#if funcError}
+            <p class="text-error text-xs">{funcError}</p>
+          {/if}
+          <div class="flex flex-wrap gap-2 mt-1">
+            {#each PRESETS as preset}
+              <Button
+                variant="outline"
+                size="sm"
+                onclick={() => selectPreset(preset.expr)}
+                class={funcExpr === preset.expr ? 'border-accent text-accent' : ''}
+              >
+                {preset.label}
+              </Button>
+            {/each}
+          </div>
+        </div>
+
         <p class="text-xs text-muted mb-3">
-          Function: <KaTeX math="f(x) = x^3 - x - 2" />. Adjust the interval <KaTeX math="[a, b]" /> to see when opposite signs guarantee a root.
+          Adjust the interval <KaTeX math="[a, b]" /> to see when opposite signs guarantee a root.
         </p>
 
         <div class="w-full overflow-x-auto">

@@ -3,7 +3,9 @@
     IVTVisualizer,
     EVTVisualizer,
     MVTVisualizer,
-    TaylorVisualizer
+    TaylorVisualizer,
+    MVTIntegralsVisualizer,
+    EpsilonDelta
   } from '$lib/features/math-preliminaries';
 </script>
 
@@ -23,4 +25,6 @@
   <EVTVisualizer />
   <MVTVisualizer />
   <TaylorVisualizer />
+  <MVTIntegralsVisualizer />
+  <EpsilonDelta />
 </div>

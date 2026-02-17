@@ -3,3 +3,6 @@ export { default as ErrorCalculator } from './ErrorCalculator.svelte';
 export { default as ErrorPractice } from './ErrorPractice.svelte';
 export { default as ConvergenceChart } from './ConvergenceChart.svelte';
 export { default as SequenceAnalyzer } from './SequenceAnalyzer.svelte';
+export { default as ConditionNumber } from './ConditionNumber.svelte';
+export { default as SeriesAnalyzer } from './SeriesAnalyzer.svelte';
+export { default as FloatingPointProof } from './FloatingPointProof.svelte';

@@ -101,7 +101,7 @@
 </script>
 
 <section>
-  <h2 class="text-xl font-bold text-primary mb-4">Method Comparison</h2>
+  <h2 class="text-xl font-semibold text-accent mb-4">Method Comparison</h2>
   <p class="text-muted mb-6">
     Compare convergence speed and behavior of all three methods on the same matrix.
   </p>

@@ -179,7 +179,7 @@
 
 <div class="space-y-6">
   <Card>
-    <h2 class="text-xl font-bold text-primary mb-4">Numerical Differentiation</h2>
+    <h2 class="text-xl font-semibold text-accent mb-4">Numerical Differentiation</h2>
     <p class="text-muted mb-4">
       Approximate the derivative f'(x) using finite difference formulas. The exact derivative is the limit as h → 0.
     </p>

@@ -161,7 +161,7 @@
 
 <div class="space-y-6">
   <Card>
-    <h2 class="text-xl font-bold text-primary mb-4">Simpson's Rule</h2>
+    <h2 class="text-xl font-semibold text-accent mb-4">Simpson's Rule</h2>
     <p class="text-muted mb-4">
       Approximate the integral using parabolic segments. More accurate than trapezoidal for smooth functions.
     </p>

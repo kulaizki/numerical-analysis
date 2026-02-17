@@ -80,7 +80,7 @@
 </script>
 
 <section class="mb-12 border-b border-border pb-12">
-  <h2 class="text-xl font-bold text-primary mb-4">1. Floating-Point Arithmetic</h2>
+  <h2 class="text-xl font-semibold text-accent">1. Floating-Point Arithmetic</h2>
 
   <Card class="mb-6">
     <h3 class="text-lg font-semibold text-primary mb-3">IEEE 754 Double-Precision Format</h3>

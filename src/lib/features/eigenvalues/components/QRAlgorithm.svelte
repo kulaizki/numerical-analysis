@@ -85,7 +85,7 @@
 </script>
 
 <section>
-  <h2 class="text-xl font-bold text-primary mb-4">QR Algorithm</h2>
+  <h2 class="text-xl font-semibold text-accent mb-4">QR Algorithm</h2>
   <p class="text-muted mb-6">
     Iterative method for finding all eigenvalues simultaneously using QR factorization.
   </p>

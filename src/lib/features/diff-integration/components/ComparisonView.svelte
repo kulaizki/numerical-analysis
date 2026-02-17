@@ -93,7 +93,7 @@
 
 <div class="space-y-6">
   <Card>
-    <h2 class="text-xl font-bold text-primary mb-4">Method Comparison</h2>
+    <h2 class="text-xl font-semibold text-accent mb-4">Method Comparison</h2>
     <p class="text-muted mb-4">
       Compare the convergence rates of trapezoidal vs Simpson's rule. Simpson's rule converges much faster!
     </p>

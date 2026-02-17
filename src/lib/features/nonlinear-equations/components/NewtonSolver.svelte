@@ -204,7 +204,7 @@
 
 <div class="space-y-6">
   <Card>
-    <h2 class="text-xl font-semibold text-primary mb-4">Newton's Method</h2>
+    <h2 class="text-xl font-semibold text-accent mb-4">Newton's Method</h2>
 
     <div class="space-y-4">
       <div>

@@ -102,7 +102,7 @@
 </script>
 
 <section>
-  <h2 class="text-xl font-bold text-primary mb-4">Power Method</h2>
+  <h2 class="text-xl font-semibold text-accent mb-4">Power Method</h2>
   <p class="text-muted mb-6">
     Iterative method for finding the dominant eigenvalue and corresponding eigenvector.
   </p>

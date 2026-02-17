@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-	<title>ODEs | Numerical Analysis</title>
+	<title>odes | numerical analysis</title>
 </svelte:head>
 
 <div class="space-y-6">

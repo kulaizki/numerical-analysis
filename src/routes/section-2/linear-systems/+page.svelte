@@ -21,7 +21,7 @@
 </script>
 
 <svelte:head>
-  <title>Linear Systems | Numerical Analysis</title>
+  <title>linear systems | numerical analysis</title>
 </svelte:head>
 
 <div class="space-y-6">

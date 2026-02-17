@@ -100,7 +100,7 @@
 </script>
 
 <svelte:head>
-  <title>Practice | Numerical Analysis</title>
+  <title>practice | numerical analysis</title>
 </svelte:head>
 
 <div class="space-y-6">

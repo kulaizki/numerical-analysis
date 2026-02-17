@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-  <title>Eigenvalues | Numerical Analysis</title>
+  <title>eigenvalues | numerical analysis</title>
 </svelte:head>
 
 <div class="space-y-6">

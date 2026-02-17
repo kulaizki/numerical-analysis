@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-  <title>Differentiation & Integration | Numerical Analysis</title>
+  <title>differentiation & integration | numerical analysis</title>
 </svelte:head>
 
 <div class="space-y-6">

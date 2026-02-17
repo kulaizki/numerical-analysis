@@ -27,7 +27,7 @@
 </script>
 
 <svelte:head>
-  <title>Compare Methods | Numerical Analysis</title>
+  <title>compare methods | numerical analysis</title>
 </svelte:head>
 
 <div class="space-y-6">

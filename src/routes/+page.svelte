@@ -1,5 +1,5 @@
 <svelte:head>
-  <title>Interactive Numerical Analysis</title>
+  <title>interactive numerical analysis</title>
 </svelte:head>
 
 <script lang="ts">

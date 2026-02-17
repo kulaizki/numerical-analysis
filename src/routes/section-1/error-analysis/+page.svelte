@@ -14,7 +14,7 @@
 </script>
 
 <svelte:head>
-  <title>Error Analysis | Numerical Analysis</title>
+  <title>error analysis | numerical analysis</title>
 </svelte:head>
 
 <div class="space-y-8">

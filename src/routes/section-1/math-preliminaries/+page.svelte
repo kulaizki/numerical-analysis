@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-  <title>Math Preliminaries | Numerical Analysis</title>
+  <title>math preliminaries | numerical analysis</title>
 </svelte:head>
 
 <div class="space-y-8">

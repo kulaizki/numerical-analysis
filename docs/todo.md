@@ -316,6 +316,72 @@ Add these as a dedicated problem set in the practice system with full step-by-st
   - [x] (c) f(x)=2bx
 - [x] Problem 8: Series convergence — Σ(1/2ⁿ) from n=1 to ∞ (geometric, sum=1)
 
+## Phase 13: Section 2 Lecture Alignment — Worked Examples & New Topics
+
+### Nonlinear Equations — Worked Examples
+All three methods use the same function f(x) = x⁶ − x − 1 = 0 for direct comparison.
+
+- [x] Bisection worked example (x⁶−x−1=0 on [1, 1.5], ε=0.00005)
+  - [x] Full 15-iteration table (a, b, c, f(b), f(c), f(b)f(c))
+  - [x] Required iterations formula: n ≥ log₂((b−a)/ε) → n ≥ 15
+  - [x] Convergence bound: |α−cₙ| ≤ (1/2)ⁿ(b−a)
+- [x] Newton's worked example (x⁶−x−1=0, x₀=2)
+  - [x] 7 iterations: x₁=1.6806, x₂=1.4307, ..., x₇=1.134724
+  - [x] Quadratic convergence theorem: lim (α−xₙ₊₁)/(α−xₙ)² = −f''(α)/(2f'(α))
+  - [x] Error estimation: α−xₙ ≈ xₙ₊₁−xₙ
+- [x] Secant worked example (x⁶−x−1=0, x₀=1, x₁=2)
+  - [x] 8 iterations step-by-step
+  - [x] Error analysis formula with f''/f'
+  - [x] Comparison note: converges to same root as Newton (1.134724) but in more iterations
+
+### Linear Systems — Worked Examples
+- [x] Gauss-Jordan worked example (x+y+z=900000 system)
+  - [x] Augmented matrix setup
+  - [x] Step-by-step row operations: −4r₁+r₂→r₂, −1·r₂→r₂, 2r₂+r₃→r₃, r₃/5→r₃
+  - [x] Back substitution: x₃=360000, x₂=180000, x₁=360000
+- [x] LU Factorization worked example (same 900000 system)
+  - [x] Derive L and U matrices step by step
+  - [x] Solve Ly=b (forward sub), then Ux=y (back sub)
+  - [x] Verify A = LU
+- [x] Jacobi worked example (6x₁−2x₂+x₃=11 system)
+  - [x] Split A = D+L+U, show each matrix
+  - [x] 8 iterations from x⁰=(0,0,0) → converges to (2,1,1)
+  - [x] Show iteration formula: xᵏ = −D⁻¹(L+U)xᵏ⁻¹ + D⁻¹b
+- [x] Gauss-Seidel worked example (same system)
+  - [x] 5 iterations from x⁰=(0,0,0) → faster convergence
+  - [x] Show formula: xⁿ⁺¹ = −(L+D)⁻¹Uxⁿ + (L+D)⁻¹b
+  - [x] Compare: 5 iterations vs Jacobi's 8
+
+### Linear Systems — New Sub-topics
+- [x] Matrix & Vector Norms (new component)
+  - [x] Theory: 1-norm (sum of magnitudes), 2-norm (Euclidean), ∞-norm (max)
+  - [x] Matrix norms: ||A||₁ (max column sum), ||A||∞ (max row sum), Frobenius norm
+  - [x] Interactive calculator: input vector/matrix, compute all norms
+  - [x] Worked example: x=(1.25, 0.02, −5.15, 0) → ||x||₁=6.42, ||x||∞=5.15
+  - [x] Matrix example: A=[5,9;−2,1] → ||A||_F=10.54, ||A||∞=14.0
+- [x] Error in Solving Linear Systems (new component)
+  - [x] Theory: residual r=b−Ax̄, error e=A⁻¹r, correction x̄+ē
+  - [x] Worked example using Gauss-Seidel result x̄=(2.000119, 1.000068, 1.000051)
+  - [x] Show residual computation, error estimation, and corrected solution = (2,1,1)
+  - [x] Interactive: input approximate solution, compute residual and correction
+
+### Problem Set 2 (Professor's Homework)
+- [x] Problem 1: Bisection for x³−2x−2=0, ε=0.0001
+- [x] Problem 2: Newton's for f(x)=4x³−1−e^(x²/2)
+  - [x] (a) Find f'(x)
+  - [x] (b) Newton from x₀=2, which root? iterations for error < 10⁻⁵
+  - [x] (c) Find other root from different starting point
+- [x] Problem 3: Secant for same f(x), x₀=0, x₁=1, ε=0.001
+- [x] Problem 4: System 2.51x+1.48y+4.53z=0.05, etc.
+  - [x] (a) Augmented matrix
+  - [x] (b) Solve via LU, round to 4 decimals
+  - [x] (c) Find residual given true solution
+- [x] Problem 5: Compute 1-, 2-, ∞-norms of given 3×3 matrix
+- [x] Problem 6: Solve system with Jacobi and Gauss-Seidel (5-digit precision)
+  - [x] (a) Jacobi iterations
+  - [x] (b) Gauss-Seidel iterations
+  - [x] (c) Compute error ē given true solution
+
 ## Decisions
 
 - **No landing page** — straight into the app with sidebar nav

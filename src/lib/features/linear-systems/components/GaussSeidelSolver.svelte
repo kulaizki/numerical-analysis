@@ -94,6 +94,8 @@
     }]
   });
 
+  let showExample = $state(false);
+
   // Practice problem
   let seidelPracticeUserIter = $state('');
   let seidelPracticeCorrect = $state<boolean | null>(null);
@@ -248,6 +250,109 @@
         </div>
       {/if}
     </div>
+  </Card>
+
+  <!-- Worked Example -->
+  <Card>
+    <button
+      class="w-full flex items-center justify-between p-4"
+      onclick={() => showExample = !showExample}
+    >
+      <h3 class="text-xl font-semibold text-primary">Worked Example</h3>
+      <span class="text-muted">{showExample ? '▼' : '▶'}</span>
+    </button>
+    {#if showExample}
+      <div class="px-4 pb-4 space-y-6 text-tertiary">
+        <div>
+          <p class="font-semibold text-primary mb-2">System:</p>
+          <div class="bg-bg-2 p-4 border border-border font-mono text-sm space-y-1">
+            <div>6x₁ − 2x₂ + x₃ = 11</div>
+            <div>−2x₁ + 7x₂ + 2x₃ = 5</div>
+            <div>x₁ + 2x₂ − 5x₃ = −1</div>
+          </div>
+        </div>
+
+        <div>
+          <p class="font-semibold text-primary mb-2">Matrix Update Formula:</p>
+          <KaTeX math={"\\mathbf{x}^{(k+1)} = -(L+D)^{-1}U\\mathbf{x}^{(k)} + (L+D)^{-1}\\mathbf{b}"} displayMode={true} />
+          <p class="text-sm mt-2">
+            Unlike Jacobi, updated components are used immediately within the same iteration.
+          </p>
+        </div>
+
+        <div>
+          <p class="font-semibold text-primary mb-2">Iterations from x⁽⁰⁾ = (0, 0, 0):</p>
+          <div class="overflow-x-auto">
+            <table class="w-full font-mono text-sm border border-border">
+              <thead>
+                <tr class="border-b border-border bg-bg-2">
+                  <th class="text-center py-2 px-4 text-tertiary">k</th>
+                  <th class="text-right py-2 px-4 text-tertiary">x₁</th>
+                  <th class="text-right py-2 px-4 text-tertiary">x₂</th>
+                  <th class="text-right py-2 px-4 text-tertiary">x₃</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="border-b border-border/50">
+                  <td class="text-center py-2 px-4 text-muted">0</td>
+                  <td class="text-right py-2 px-4">0.0000</td>
+                  <td class="text-right py-2 px-4">0.0000</td>
+                  <td class="text-right py-2 px-4">0.0000</td>
+                </tr>
+                <tr class="border-b border-border/50">
+                  <td class="text-center py-2 px-4 text-muted">1</td>
+                  <td class="text-right py-2 px-4">1.8333</td>
+                  <td class="text-right py-2 px-4">1.2381</td>
+                  <td class="text-right py-2 px-4">1.0619</td>
+                </tr>
+                <tr class="border-b border-border/50">
+                  <td class="text-center py-2 px-4 text-muted">2</td>
+                  <td class="text-right py-2 px-4">2.0690</td>
+                  <td class="text-right py-2 px-4">1.0020</td>
+                  <td class="text-right py-2 px-4">1.0146</td>
+                </tr>
+                <tr class="border-b border-border/50">
+                  <td class="text-center py-2 px-4 text-muted">3</td>
+                  <td class="text-right py-2 px-4">2.0015</td>
+                  <td class="text-right py-2 px-4">0.9984</td>
+                  <td class="text-right py-2 px-4">1.0003</td>
+                </tr>
+                <tr class="border-b border-border/50">
+                  <td class="text-center py-2 px-4 text-muted">4</td>
+                  <td class="text-right py-2 px-4">1.9994</td>
+                  <td class="text-right py-2 px-4">1.0000</td>
+                  <td class="text-right py-2 px-4">0.9999</td>
+                </tr>
+                <tr class="border-b border-border/50">
+                  <td class="text-center py-2 px-4 text-muted">5</td>
+                  <td class="text-right py-2 px-4 text-green-400">2.0001</td>
+                  <td class="text-right py-2 px-4 text-green-400">1.0001</td>
+                  <td class="text-right py-2 px-4 text-green-400">1.0001</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-sm mt-2 text-green-400 font-semibold">Converges in ~5 iterations vs Jacobi's 8!</p>
+        </div>
+
+        <div class="p-4 border border-border bg-bg-2 space-y-3">
+          <p class="font-semibold text-primary">Jacobi vs Gauss-Seidel Comparison:</p>
+          <div class="space-y-2 text-sm">
+            <div class="flex items-start gap-2">
+              <span class="text-yellow-400 font-semibold shrink-0">Jacobi:</span>
+              <span>Uses ALL previous iteration values → 8 iterations to converge</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-green-400 font-semibold shrink-0">Gauss-Seidel:</span>
+              <span>Uses UPDATED values as soon as available → 5 iterations to converge</span>
+            </div>
+          </div>
+          <p class="text-sm mt-2">
+            Gauss-Seidel converges faster because it uses the most recent information at every sub-step of the iteration.
+          </p>
+        </div>
+      </div>
+    {/if}
   </Card>
 
   <!-- Practice Problem -->

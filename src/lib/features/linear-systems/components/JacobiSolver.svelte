@@ -102,6 +102,8 @@
     const userIter = parseInt(jacobiPracticeUserIter);
     jacobiPracticeCorrect = userIter >= 8 && userIter <= 20;
   }
+
+  let showExample = $state(false);
 </script>
 
 <div class="space-y-6">
@@ -288,5 +290,85 @@
         {/if}
       </div>
     </div>
+  </Card>
+
+  <!-- Worked Example -->
+  <Card>
+    <button
+      class="w-full flex items-center justify-between p-4"
+      onclick={() => showExample = !showExample}
+    >
+      <h3 class="text-xl font-semibold text-primary">Worked Example</h3>
+      <span class="text-muted">{showExample ? '▼' : '▶'}</span>
+    </button>
+    {#if showExample}
+      <div class="px-4 pb-4 space-y-6 text-tertiary">
+
+        <!-- System -->
+        <div class="space-y-2">
+          <p class="font-semibold text-primary">System</p>
+          <KaTeX math={"\\begin{cases} 6x_1 - 2x_2 + x_3 = 11 \\\\ -2x_1 + 7x_2 + 2x_3 = 5 \\\\ x_1 + 2x_2 - 5x_3 = -1 \\end{cases}"} displayMode={true} />
+        </div>
+
+        <!-- Step 1 -->
+        <div class="space-y-2">
+          <p class="font-semibold text-primary">Step 1: Split A = D + L + U</p>
+          <KaTeX math={"D = \\begin{pmatrix} 6 & 0 & 0 \\\\ 0 & 7 & 0 \\\\ 0 & 0 & -5 \\end{pmatrix}, \\quad L = \\begin{pmatrix} 0 & 0 & 0 \\\\ -2 & 0 & 0 \\\\ 1 & 2 & 0 \\end{pmatrix}, \\quad U = \\begin{pmatrix} 0 & -2 & 1 \\\\ 0 & 0 & 2 \\\\ 0 & 0 & 0 \\end{pmatrix}"} displayMode={true} />
+        </div>
+
+        <!-- Step 2 -->
+        <div class="space-y-2">
+          <p class="font-semibold text-primary">Step 2: Iteration Formula</p>
+          <KaTeX math={"\\mathbf{x}^{(k)} = -D^{-1}(L + U)\\,\\mathbf{x}^{(k-1)} + D^{-1}\\mathbf{b}"} displayMode={true} />
+          <p class="text-sm">Expanded component-wise:</p>
+          <KaTeX math={"\\begin{aligned} x_1^{(k)} &= \\frac{1}{6}\\left(11 + 2x_2^{(k-1)} - x_3^{(k-1)}\\right) \\\\ x_2^{(k)} &= \\frac{1}{7}\\left(5 + 2x_1^{(k-1)} - 2x_3^{(k-1)}\\right) \\\\ x_3^{(k)} &= \\frac{1}{-5}\\left(-1 - x_1^{(k-1)} - 2x_2^{(k-1)}\\right) \\end{aligned}"} displayMode={true} />
+        </div>
+
+        <!-- Step 3: Iterations table -->
+        <div class="space-y-3">
+          <p class="font-semibold text-primary">Step 3: Iterations from x<sup>(0)</sup> = (0, 0, 0)</p>
+          <div class="overflow-x-auto">
+            <table class="w-full font-mono text-sm border border-border">
+              <thead>
+                <tr class="border-b border-border bg-bg-2">
+                  <th class="py-2 px-4 text-left text-tertiary">k</th>
+                  <th class="py-2 px-4 text-right text-tertiary">x₁</th>
+                  <th class="py-2 px-4 text-right text-tertiary">x₂</th>
+                  <th class="py-2 px-4 text-right text-tertiary">x₃</th>
+                </tr>
+              </thead>
+              <tbody>
+                {#each [
+                  [0, '0.0000', '0.0000', '0.0000'],
+                  [1, '1.8333', '0.7143', '0.2000'],
+                  [2, '2.0381', '1.1810', '0.8524'],
+                  [3, '2.0849', '1.0531', '1.0800'],
+                  [4, '2.0044', '1.0014', '1.0382'],
+                  [5, '1.9941', '0.9903', '1.0014'],
+                  [6, '1.9965', '0.9979', '0.9950'],
+                  [7, '1.9990', '0.9986', '0.9992'],
+                  [8, '2.0004', '1.0005', '1.0002'],
+                ] as row}
+                  <tr class="border-b border-border/50 {row[0] === 8 ? 'bg-green-500/10' : ''}">
+                    <td class="py-2 px-4 text-muted">{row[0]}</td>
+                    <td class="py-2 px-4 text-right {row[0] === 8 ? 'text-green-400' : 'text-tertiary'}">{row[1]}</td>
+                    <td class="py-2 px-4 text-right {row[0] === 8 ? 'text-green-400' : 'text-tertiary'}">{row[2]}</td>
+                    <td class="py-2 px-4 text-right {row[0] === 8 ? 'text-green-400' : 'text-tertiary'}">{row[3]}</td>
+                  </tr>
+                {/each}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Conclusion -->
+        <div class="p-4 bg-green-500/10 border border-green-500">
+          <p class="text-green-400 font-semibold">
+            Converges to true solution (2, 1, 1) after ~8 iterations. &#9632;
+          </p>
+        </div>
+
+      </div>
+    {/if}
   </Card>
 </div>

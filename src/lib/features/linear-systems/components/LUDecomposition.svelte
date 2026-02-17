@@ -116,6 +116,8 @@
     }
   }
 
+  let showExample = $state(false);
+
   // Practice problem
   let luPracticeUserSol = $state<string[]>(['', '', '']);
   let luPracticeCorrect = $state<boolean | null>(null);
@@ -257,6 +259,73 @@
         </div>
       {/if}
     </div>
+  </Card>
+
+  <!-- Worked Example -->
+  <Card>
+    <button
+      class="w-full flex items-center justify-between p-4"
+      onclick={() => showExample = !showExample}
+    >
+      <h3 class="text-xl font-semibold text-primary">Worked Example</h3>
+      <span class="text-muted">{showExample ? '▼' : '▶'}</span>
+    </button>
+    {#if showExample}
+      <div class="px-4 pb-4 space-y-6 text-tertiary">
+        <p class="text-sm">
+          Solve the system <KaTeX math={'A\\mathbf{x} = \\mathbf{b}'} /> where
+        </p>
+
+        <div class="space-y-2">
+          <KaTeX math={'A = \\begin{bmatrix} 1 & 1 & 1 \\\\ 4 & 3 & 2 \\\\ 0 & -2 & 1 \\end{bmatrix}, \\quad \\mathbf{b} = \\begin{bmatrix} 900000 \\\\ 2700000 \\\\ 0 \\end{bmatrix}'} displayMode />
+        </div>
+
+        <!-- Step 1 -->
+        <div class="space-y-3">
+          <p class="font-semibold text-primary">Step 1: Find L and U via Gaussian Elimination</p>
+          <p>Compute multipliers and eliminate column 1:</p>
+          <KaTeX math={'m_{21} = \\frac{4}{1} = 4, \\quad m_{31} = \\frac{0}{1} = 0'} displayMode />
+          <p>After eliminating column 1, the working matrix becomes:</p>
+          <KaTeX math={'\\begin{bmatrix} 1 & 1 & 1 \\\\ 0 & -1 & -2 \\\\ 0 & -2 & 1 \\end{bmatrix}'} displayMode />
+          <p>Compute multiplier for column 2:</p>
+          <KaTeX math={'m_{32} = \\frac{-2}{-1} = 2'} displayMode />
+          <p>The resulting factorization is:</p>
+          <KaTeX math={'L = \\begin{bmatrix} 1 & 0 & 0 \\\\ 4 & -1 & 0 \\\\ 0 & -2 & 5 \\end{bmatrix}, \\quad U = \\begin{bmatrix} 1 & 1 & 1 \\\\ 0 & 1 & 2 \\\\ 0 & 0 & 1 \\end{bmatrix}'} displayMode />
+          <div class="p-3 bg-blue-500/10 border border-blue-500 text-sm">
+            Verify: <KaTeX math={'L \\times U = A'} /> ✓
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="space-y-3">
+          <p class="font-semibold text-primary">Step 2: Solve <KaTeX math={'L\\mathbf{y} = \\mathbf{b}'} /> (Forward Substitution)</p>
+          <KaTeX math={'\\begin{bmatrix} 1 & 0 & 0 \\\\ 4 & -1 & 0 \\\\ 0 & -2 & 5 \\end{bmatrix} \\begin{bmatrix} y_1 \\\\ y_2 \\\\ y_3 \\end{bmatrix} = \\begin{bmatrix} 900000 \\\\ 2700000 \\\\ 0 \\end{bmatrix}'} displayMode />
+          <ul class="list-disc list-inside space-y-2 ml-2 text-sm">
+            <li><KaTeX math={'y_1 = 900000'} /></li>
+            <li><KaTeX math={'4y_1 - y_2 = 2700000 \\Rightarrow y_2 = 4(900000) - 2700000 = 900000'} /></li>
+            <li><KaTeX math={'-2y_2 + 5y_3 = 0 \\Rightarrow y_3 = \\frac{2(900000)}{5} = 360000'} /></li>
+          </ul>
+          <KaTeX math={'\\mathbf{y} = \\begin{bmatrix} 900000 \\\\ 900000 \\\\ 360000 \\end{bmatrix}'} displayMode />
+        </div>
+
+        <!-- Step 3 -->
+        <div class="space-y-3">
+          <p class="font-semibold text-primary">Step 3: Solve <KaTeX math={'U\\mathbf{x} = \\mathbf{y}'} /> (Back Substitution)</p>
+          <KaTeX math={'\\begin{bmatrix} 1 & 1 & 1 \\\\ 0 & 1 & 2 \\\\ 0 & 0 & 1 \\end{bmatrix} \\begin{bmatrix} x_1 \\\\ x_2 \\\\ x_3 \\end{bmatrix} = \\begin{bmatrix} 900000 \\\\ 900000 \\\\ 360000 \\end{bmatrix}'} displayMode />
+          <ul class="list-disc list-inside space-y-2 ml-2 text-sm">
+            <li><KaTeX math={'x_3 = 360000'} /></li>
+            <li><KaTeX math={'x_2 + 2(360000) = 900000 \\Rightarrow x_2 = 180000'} /></li>
+            <li><KaTeX math={'x_1 + 180000 + 360000 = 900000 \\Rightarrow x_1 = 360000'} /></li>
+          </ul>
+        </div>
+
+        <!-- Result -->
+        <div class="p-4 bg-green-500/10 border border-green-500 space-y-2">
+          <p class="font-semibold text-primary">Solution</p>
+          <KaTeX math={'\\mathbf{x} = \\begin{bmatrix} 360000 \\\\ 180000 \\\\ 360000 \\end{bmatrix} \\blacksquare'} displayMode />
+        </div>
+      </div>
+    {/if}
   </Card>
 
   <!-- Practice Problem -->

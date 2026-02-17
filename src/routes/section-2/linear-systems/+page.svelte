@@ -4,7 +4,9 @@
     LUDecomposition,
     JacobiSolver,
     GaussSeidelSolver,
-    CompareMethods
+    CompareMethods,
+    MatrixNorms,
+    LinearSystemError
   } from '$lib/features/linear-systems';
 
   let activeTab = $state<'gauss' | 'lu' | 'jacobi' | 'seidel' | 'compare'>('gauss');
@@ -53,5 +55,15 @@
     {:else if activeTab === 'compare'}
       <CompareMethods />
     {/if}
+
+    <section class="mt-12 border-t border-border pt-12">
+      <h2 class="text-xl font-bold text-primary mb-4">Matrix & Vector Norms</h2>
+      <MatrixNorms />
+    </section>
+
+    <section class="mt-12 border-t border-border pt-12">
+      <h2 class="text-xl font-bold text-primary mb-4">Error in Linear Systems</h2>
+      <LinearSystemError />
+    </section>
   </div>
 </div>

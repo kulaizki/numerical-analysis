@@ -3,7 +3,9 @@ export {
   LUDecomposition,
   JacobiSolver,
   GaussSeidelSolver,
-  CompareMethods
+  CompareMethods,
+  MatrixNorms,
+  LinearSystemError
 } from './components/index.ts';
 
 export type { GaussStep, LUStep, IterationEntry } from './types.ts';

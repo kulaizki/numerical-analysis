@@ -3,3 +3,5 @@ export { default as LUDecomposition } from './LUDecomposition.svelte';
 export { default as JacobiSolver } from './JacobiSolver.svelte';
 export { default as GaussSeidelSolver } from './GaussSeidelSolver.svelte';
 export { default as CompareMethods } from './CompareMethods.svelte';
+export { default as MatrixNorms } from './MatrixNorms.svelte';
+export { default as LinearSystemError } from './LinearSystemError.svelte';

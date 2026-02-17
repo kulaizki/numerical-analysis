@@ -108,6 +108,8 @@
       Math.abs(val - correctSol[i]) < tolerance
     );
   }
+
+  let showExample = $state(false);
 </script>
 
 <div class="space-y-6">
@@ -282,5 +284,69 @@
         {/if}
       </div>
     </div>
+  </Card>
+
+  <!-- Worked Example -->
+  <Card>
+    <button
+      class="w-full flex items-center justify-between p-4"
+      onclick={() => showExample = !showExample}
+    >
+      <h3 class="text-xl font-semibold text-primary">Worked Example (Gauss-Jordan)</h3>
+      <span class="text-muted">{showExample ? '▼' : '▶'}</span>
+    </button>
+    {#if showExample}
+      <div class="px-4 pb-6 space-y-6 text-tertiary">
+        <p>
+          Solve the system using Gauss-Jordan elimination:
+          <KaTeX math={'x_1 + x_2 + x_3 = 900{,}000,\\quad 4x_1 + 3x_2 + 2x_3 = 2{,}700{,}000,\\quad -2x_2 + x_3 = 0'} displayMode={true} />
+        </p>
+
+        <!-- Step 1 -->
+        <div class="space-y-2">
+          <p class="font-semibold text-primary">Step 1: Augmented Matrix</p>
+          <KaTeX math={'\\left[\\begin{array}{ccc|c} 1 & 1 & 1 & 900000 \\\\ 4 & 3 & 2 & 2700000 \\\\ 0 & -2 & 1 & 0 \\end{array}\\right]'} displayMode={true} />
+        </div>
+
+        <!-- Step 2 -->
+        <div class="space-y-2">
+          <p class="font-semibold text-primary">Step 2: <KaTeX math={'-4r_1 + r_2 \\to r_2'} /> </p>
+          <KaTeX math={'\\left[\\begin{array}{ccc|c} 1 & 1 & 1 & 900000 \\\\ 0 & -1 & -2 & -900000 \\\\ 0 & -2 & 1 & 0 \\end{array}\\right]'} displayMode={true} />
+        </div>
+
+        <!-- Step 3 -->
+        <div class="space-y-2">
+          <p class="font-semibold text-primary">Step 3: <KaTeX math={'-1 \\cdot r_2 \\to r_2'} /> </p>
+          <KaTeX math={'\\left[\\begin{array}{ccc|c} 1 & 1 & 1 & 900000 \\\\ 0 & 1 & 2 & 900000 \\\\ 0 & -2 & 1 & 0 \\end{array}\\right]'} displayMode={true} />
+        </div>
+
+        <!-- Step 4 -->
+        <div class="space-y-2">
+          <p class="font-semibold text-primary">Step 4: <KaTeX math={'2r_2 + r_3 \\to r_3'} /> </p>
+          <KaTeX math={'\\left[\\begin{array}{ccc|c} 1 & 1 & 1 & 900000 \\\\ 0 & 1 & 2 & 900000 \\\\ 0 & 0 & 5 & 1800000 \\end{array}\\right]'} displayMode={true} />
+        </div>
+
+        <!-- Step 5 -->
+        <div class="space-y-2">
+          <p class="font-semibold text-primary">Step 5: <KaTeX math={'r_3 / 5 \\to r_3'} /> </p>
+          <KaTeX math={'\\left[\\begin{array}{ccc|c} 1 & 1 & 1 & 900000 \\\\ 0 & 1 & 2 & 900000 \\\\ 0 & 0 & 1 & 360000 \\end{array}\\right]'} displayMode={true} />
+        </div>
+
+        <!-- Step 6 -->
+        <div class="space-y-2">
+          <p class="font-semibold text-primary">Step 6: Back Substitution</p>
+          <div class="space-y-1 ml-4">
+            <KaTeX math={'x_3 = 360{,}000'} displayMode={true} />
+            <KaTeX math={'x_2 + 2(360{,}000) = 900{,}000 \\implies x_2 = 180{,}000'} displayMode={true} />
+            <KaTeX math={'x_1 + 180{,}000 + 360{,}000 = 900{,}000 \\implies x_1 = 360{,}000'} displayMode={true} />
+          </div>
+        </div>
+
+        <div class="p-4 bg-green-500/10 border border-green-500">
+          <p class="font-semibold text-primary">Solution:</p>
+          <KaTeX math={'x_1 = 360{,}000,\\quad x_2 = 180{,}000,\\quad x_3 = 360{,}000 \\quad \\blacksquare'} displayMode={true} />
+        </div>
+      </div>
+    {/if}
   </Card>
 </div>

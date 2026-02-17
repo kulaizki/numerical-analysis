@@ -363,5 +363,67 @@ export const problemTemplates: Problem[] = [
     type: 'numeric',
     correctAnswer: 1,
     explanation: 'Geometric series with $a=1/2$, $r=1/2$. Sum $= \\frac{a}{1-r}=\\frac{1/2}{1/2}=1$.'
+  },
+
+  // Problem Set 2
+  {
+    id: 'ps2-1',
+    topicId: 'nonlinear-equations',
+    difficulty: 'intermediate',
+    question: 'Using bisection on $f(x) = x^3 - 2x - 2$ starting with $[1, 2]$, what is the first midpoint $c_1$?',
+    type: 'multiple-choice',
+    options: ['$1.25$', '$1.5$', '$1.75$', '$2.0$'],
+    correctAnswer: '$1.5$',
+    explanation: '$c_1 = (1+2)/2 = 1.5$. Since $f(1) = -3 < 0$ and $f(2) = 2 > 0$, the interval $[1,2]$ is valid.'
+  },
+  {
+    id: 'ps2-2',
+    topicId: 'nonlinear-equations',
+    difficulty: 'advanced',
+    question: 'For $f(x) = 4x^3 - 1 - e^{x^2/2}$, what is $f\'(x)$?',
+    type: 'multiple-choice',
+    options: ['$12x^2 - xe^{x^2/2}$', '$12x^2 - e^{x^2/2}$', '$4x^2 - xe^{x^2/2}$', '$12x - e^{x/2}$'],
+    correctAnswer: '$12x^2 - xe^{x^2/2}$',
+    explanation: '$f\'(x) = 12x^2 - \\frac{d}{dx}e^{x^2/2} = 12x^2 - xe^{x^2/2}$ using chain rule.'
+  },
+  {
+    id: 'ps2-3',
+    topicId: 'nonlinear-equations',
+    difficulty: 'intermediate',
+    question: 'The secant method formula is $x_{n+1} = x_n - f(x_n) \\cdot \\frac{x_n - x_{n-1}}{f(x_n) - f(x_{n-1})}$. Compared to Newton\'s method, the secant method:',
+    type: 'multiple-choice',
+    options: ['Requires the derivative $f\'(x)$', 'Has quadratic convergence', 'Does not require $f\'(x)$ but converges slower', 'Always converges'],
+    correctAnswer: 'Does not require $f\'(x)$ but converges slower',
+    explanation: 'Secant replaces $f\'(x_n)$ with a finite difference approximation. It has superlinear convergence ($p \\approx 1.618$), slower than Newton\'s quadratic ($p = 2$).'
+  },
+  {
+    id: 'ps2-4',
+    topicId: 'linear-systems',
+    difficulty: 'advanced',
+    question: 'Given the augmented matrix $\\begin{bmatrix} 2.51 & 1.48 & 4.53 & | & 0.05 \\\\ 1.48 & 0.93 & -1.30 & | & 1.03 \\\\ 2.68 & 3.04 & -1.48 & | & -0.53 \\end{bmatrix}$, what is the first multiplier $m_{21}$ in Gaussian elimination?',
+    type: 'multiple-choice',
+    options: ['$0.5896$', '$1.6959$', '$0.4118$', '$1.0676$'],
+    correctAnswer: '$0.5896$',
+    explanation: '$m_{21} = a_{21}/a_{11} = 1.48/2.51 \\approx 0.5896$'
+  },
+  {
+    id: 'ps2-5',
+    topicId: 'linear-systems',
+    difficulty: 'intermediate',
+    question: 'Compute $||\\mathbf{x}||_\\infty$ for $\\mathbf{x} = (10.2, -2.3, -5.5)$.',
+    type: 'multiple-choice',
+    options: ['$10.2$', '$18.0$', '$5.5$', '$12.5$'],
+    correctAnswer: '$10.2$',
+    explanation: '$||\\mathbf{x}||_\\infty = \\max(|10.2|, |-2.3|, |-5.5|) = 10.2$'
+  },
+  {
+    id: 'ps2-6',
+    topicId: 'linear-systems',
+    difficulty: 'intermediate',
+    question: 'In iterative methods (Jacobi/Gauss-Seidel), Gauss-Seidel typically converges faster because:',
+    type: 'multiple-choice',
+    options: ['It uses a smaller matrix', 'It uses updated values immediately', 'It requires fewer multiplications', 'It skips diagonal elements'],
+    correctAnswer: 'It uses updated values immediately',
+    explanation: 'Gauss-Seidel uses each new $x_i^{(k+1)}$ as soon as it is computed, while Jacobi waits until all components are updated.'
   }
 ];

@@ -221,6 +221,8 @@
     }
   });
 
+  let showExample = $state(false);
+
   let ivtAnswer = $state('');
   let ivtFeedback = $state('');
 
@@ -381,6 +383,35 @@
           </p>
         {/if}
       </div>
+    </Card>
+
+    <Card class="space-y-4 mt-6">
+      <button class="w-full flex items-center justify-between text-left" onclick={() => showExample = !showExample}>
+        <h3 class="text-sm font-semibold text-accent">Worked Example 1.2</h3>
+        <span class="text-xs text-muted">{showExample ? '▲' : '▼'}</span>
+      </button>
+      {#if showExample}
+        <div class="space-y-3 text-sm">
+          <p class="text-muted font-semibold">Use the IVT to prove that x³ − 3x² − 2x + 9 = 0 is solvable.</p>
+
+          <div class="space-y-2">
+            <p class="text-muted"><span class="text-primary font-semibold">Step 1.</span> Let f(x) = x³ − 3x² − 2x + 9. This is a polynomial, hence continuous on all of ℝ.</p>
+
+            <p class="text-muted"><span class="text-primary font-semibold">Step 2.</span> Evaluate at a = −2:</p>
+            <KaTeX math={"f(-2) = (-2)^3 - 3(-2)^2 - 2(-2) + 9 = -8 - 12 + 4 + 9 = -7"} displayMode={true} />
+
+            <p class="text-muted"><span class="text-primary font-semibold">Step 3.</span> Evaluate at b = −1:</p>
+            <KaTeX math={"f(-1) = (-1)^3 - 3(-1)^2 - 2(-1) + 9 = -1 - 3 + 2 + 9 = 7"} displayMode={true} />
+
+            <p class="text-muted"><span class="text-primary font-semibold">Step 4.</span> Since f(−2) = −7 &lt; 0 and f(−1) = 7 &gt; 0, there is a sign change on [−2, −1].</p>
+
+            <p class="text-muted"><span class="text-primary font-semibold">Step 5.</span> By the IVT:</p>
+            <KaTeX math={"\\exists\\, \\xi \\in (-2,\\,-1) \\text{ such that } f(\\xi) = 0"} displayMode={true} />
+
+            <p class="text-muted">Therefore the equation x³ − 3x² − 2x + 9 = 0 has a solution in (−2, −1). <span class="text-primary">■</span></p>
+          </div>
+        </div>
+      {/if}
     </Card>
   {/if}
 </section>

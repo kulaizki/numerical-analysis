@@ -6,5 +6,7 @@ export {
   SequenceAnalyzer,
   ConditionNumber,
   SeriesAnalyzer,
-  FloatingPointProof
+  FloatingPointProof,
+  LossOfSignificance,
+  PropagatedError
 } from './components';

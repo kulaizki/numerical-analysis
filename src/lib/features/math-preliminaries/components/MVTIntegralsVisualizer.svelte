@@ -3,6 +3,7 @@
   import { Card, Button } from '$lib/components/ui';
 
   let show = $state(true);
+  let showExample = $state(false);
 
   // --- Function parser ---
   function parseFunction(expr: string): (x: number) => number {
@@ -493,6 +494,100 @@
           <span class="text-muted">Point c on the curve</span>
         </div>
       </div>
+    </Card>
+
+    <!-- Worked Example 1.5 -->
+    <Card class="space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-semibold text-primary">Example 1.5: Worked Solution</h3>
+        <Button variant="ghost" size="sm" onclick={() => showExample = !showExample}>
+          {showExample ? 'Hide' : 'Show'}
+        </Button>
+      </div>
+
+      {#if showExample}
+        <p class="text-xs text-muted">
+          Find all <KaTeX math={"\\xi \\in [1,4]"} /> satisfying the MVT for integrals for
+          <KaTeX math={"f(x) = 3x^2 - 2x"} /> on <KaTeX math={"[1,4]"} />.
+        </p>
+
+        <div class="space-y-3 text-sm">
+          <!-- Step 1 -->
+          <div class="border border-border bg-bg-2 px-3 py-2">
+            <p class="text-xs text-muted mb-1"><strong class="text-primary">Step 1.</strong> Verify continuity</p>
+            <p class="text-xs text-muted">
+              <KaTeX math={"f(x) = 3x^2 - 2x"} /> is a polynomial, hence continuous on <KaTeX math={"[1,4]"} />. The MVT for integrals applies. ✓
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="border border-border bg-bg-2 px-3 py-2">
+            <p class="text-xs text-muted mb-1"><strong class="text-primary">Step 2.</strong> Compute the integral</p>
+            <KaTeX
+              math={"\\int_1^4 (3x^2 - 2x)\\,dx = \\Big[x^3 - x^2\\Big]_1^4"}
+              displayMode={true}
+            />
+            <KaTeX
+              math={"= (64 - 16) - (1 - 1) = 48"}
+              displayMode={true}
+            />
+          </div>
+
+          <!-- Step 3 -->
+          <div class="border border-border bg-bg-2 px-3 py-2">
+            <p class="text-xs text-muted mb-1"><strong class="text-primary">Step 3.</strong> Set up MVT equation</p>
+            <KaTeX
+              math={"f(\\xi)(b - a) = 48 \\implies (3\\xi^2 - 2\\xi)(3) = 48"}
+              displayMode={true}
+            />
+          </div>
+
+          <!-- Step 4 -->
+          <div class="border border-border bg-bg-2 px-3 py-2">
+            <p class="text-xs text-muted mb-1"><strong class="text-primary">Step 4.</strong> Solve the quadratic</p>
+            <KaTeX
+              math={"9\\xi^2 - 6\\xi - 48 = 0 \\implies 3\\xi^2 - 2\\xi - 16 = 0"}
+              displayMode={true}
+            />
+          </div>
+
+          <!-- Step 5 -->
+          <div class="border border-border bg-bg-2 px-3 py-2">
+            <p class="text-xs text-muted mb-1"><strong class="text-primary">Step 5.</strong> Apply quadratic formula</p>
+            <KaTeX
+              math={"\\xi = \\frac{2 \\pm \\sqrt{4 + 192}}{6} = \\frac{2 \\pm 14}{6}"}
+              displayMode={true}
+            />
+          </div>
+
+          <!-- Step 6 -->
+          <div class="border border-border bg-bg-2 px-3 py-2">
+            <p class="text-xs text-muted mb-1"><strong class="text-primary">Step 6.</strong> Two candidate roots</p>
+            <KaTeX
+              math={"\\xi = \\frac{16}{6} = \\frac{8}{3} \\approx 2.667 \\qquad \\text{or} \\qquad \\xi = \\frac{-12}{6} = -2"}
+              displayMode={true}
+            />
+          </div>
+
+          <!-- Step 7 -->
+          <div class="border border-border bg-bg-2 px-3 py-2">
+            <p class="text-xs text-muted mb-1"><strong class="text-primary">Step 7.</strong> Select the valid root</p>
+            <p class="text-xs text-muted">
+              Since <KaTeX math={"\\xi = -2 \\notin [1,4]"} />, it is rejected.
+              <KaTeX math={"\\xi = \\tfrac{8}{3} \\in [1,4]"} /> satisfies the theorem. ■
+            </p>
+          </div>
+
+          <!-- Step 8: Verification -->
+          <div class="border px-3 py-2" style="border-color: #10b981; background: rgba(16,185,129,0.08);">
+            <p class="text-xs mb-1" style="color: #10b981;"><strong>Verification</strong></p>
+            <KaTeX
+              math={"f\\!\\left(\\tfrac{8}{3}\\right) \\cdot 3 = \\left(3 \\cdot \\frac{64}{9} - \\frac{16}{3}\\right) \\cdot 3 = \\left(\\frac{64}{3} - \\frac{16}{3}\\right) \\cdot 3 = \\frac{48}{3} \\cdot 3 = 48 \\;\\checkmark"}
+              displayMode={true}
+            />
+          </div>
+        </div>
+      {/if}
     </Card>
   {/if}
 </section>

@@ -4,6 +4,8 @@
 
   // ─── State ────────────────────────────────────────────────────────────────
   let show = $state(true);
+  let showRolleEx = $state(false);
+  let showMVTEx = $state(false);
 
   let mvtC = $state(0);
   let mvtCanvas: HTMLCanvasElement | undefined = $state();
@@ -402,6 +404,109 @@
           </div>
         </div>
       </div>
+    </Card>
+
+    <!-- Example 1.3: Rolle's Theorem -->
+    <Card class="space-y-2">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-semibold text-primary">Example 1.3: Rolle's Theorem</h3>
+        <Button variant="ghost" size="sm" onclick={() => showRolleEx = !showRolleEx}>
+          {showRolleEx ? 'Hide' : 'Show'}
+        </Button>
+      </div>
+
+      {#if showRolleEx}
+        <div class="space-y-3 pt-1">
+          <p class="text-xs text-muted">
+            Let <KaTeX math={"f(x) = x^4 - 2x^2"} /> on <KaTeX math={"[-2,\\, 2]"} />.
+          </p>
+
+          <div>
+            <p class="text-xs font-semibold text-accent mb-1">Step 1 — Continuity &amp; Differentiability</p>
+            <p class="text-xs text-muted">
+              f is a polynomial, so it is continuous on [−2, 2] and differentiable on (−2, 2). ✓
+            </p>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold text-accent mb-1">Step 2 — Equal Endpoint Values</p>
+            <KaTeX math={"f(-2) = (-2)^4 - 2(-2)^2 = 16 - 8 = 8"} displayMode={true} />
+            <KaTeX math={"f(2) = (2)^4 - 2(2)^2 = 16 - 8 = 8"} displayMode={true} />
+            <p class="text-xs text-muted">So f(−2) = f(2) = 8. ✓</p>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold text-accent mb-1">Step 3 — Derivative</p>
+            <KaTeX math={"f'(x) = 4x^3 - 4x = 4x(x^2 - 1)"} displayMode={true} />
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold text-accent mb-1">Step 4 — Solve f′(ξ) = 0</p>
+            <KaTeX math={"4\\xi(\\xi^2 - 1) = 0 \\implies \\xi = -1,\\; 0,\\; 1"} displayMode={true} />
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold text-accent mb-1">Step 5 — Verify ξ ∈ (−2, 2)</p>
+            <p class="text-xs text-muted">
+              All three critical points −1, 0, 1 lie in the open interval (−2, 2). ■
+            </p>
+          </div>
+        </div>
+      {/if}
+    </Card>
+
+    <!-- Example 1.4: Mean Value Theorem -->
+    <Card class="space-y-2">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-semibold text-primary">Example 1.4: Mean Value Theorem</h3>
+        <Button variant="ghost" size="sm" onclick={() => showMVTEx = !showMVTEx}>
+          {showMVTEx ? 'Hide' : 'Show'}
+        </Button>
+      </div>
+
+      {#if showMVTEx}
+        <div class="space-y-3 pt-1">
+          <p class="text-xs text-muted">
+            Let <KaTeX math={"f(x) = x^3 + 2x^2 - x"} /> on <KaTeX math={"[-1,\\, 2]"} />.
+          </p>
+
+          <div>
+            <p class="text-xs font-semibold text-accent mb-1">Step 1 — Continuity &amp; Differentiability</p>
+            <p class="text-xs text-muted">
+              f is a polynomial, so it is continuous on [−1, 2] and differentiable on (−1, 2). ✓
+            </p>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold text-accent mb-1">Step 2 — Endpoint Values</p>
+            <KaTeX math={"f(-1) = (-1)^3 + 2(-1)^2 - (-1) = -1 + 2 + 1 = 2"} displayMode={true} />
+            <KaTeX math={"f(2) = (2)^3 + 2(2)^2 - (2) = 8 + 8 - 2 = 14"} displayMode={true} />
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold text-accent mb-1">Step 3 — Secant Slope</p>
+            <KaTeX math={"\\frac{f(2) - f(-1)}{2 - (-1)} = \\frac{14 - 2}{3} = \\frac{12}{3} = 4"} displayMode={true} />
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold text-accent mb-1">Step 4 — Derivative</p>
+            <KaTeX math={"f'(x) = 3x^2 + 4x - 1"} displayMode={true} />
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold text-accent mb-1">Step 5 — Solve f′(ξ) = 4</p>
+            <KaTeX math={"3\\xi^2 + 4\\xi - 1 = 4 \\implies 3\\xi^2 + 4\\xi - 5 = 0"} displayMode={true} />
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold text-accent mb-1">Step 6 — Quadratic Formula</p>
+            <KaTeX math={"\\xi = \\frac{-4 \\pm \\sqrt{16 + 60}}{6} = \\frac{-4 \\pm \\sqrt{76}}{6}"} displayMode={true} />
+            <p class="text-xs text-muted">
+              Only <KaTeX math={"\\xi = \\frac{-4 + \\sqrt{76}}{6} \\approx 0.7863"} /> lies in (−1, 2). ■
+            </p>
+          </div>
+        </div>
+      {/if}
     </Card>
   {/if}
 </section>

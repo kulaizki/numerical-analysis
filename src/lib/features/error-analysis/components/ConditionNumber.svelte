@@ -4,6 +4,7 @@
   import { onMount } from 'svelte';
 
   let show = $state(true);
+  let showExamples = $state(false);
 
   // Function input state
   let funcExpr = $state('sqrt(x)');
@@ -456,6 +457,83 @@
           </div>
         </div>
       </div>
+    </Card>
+
+    <!-- Worked Examples -->
+    <Card class="space-y-4 mt-6">
+      <button class="w-full flex items-center justify-between text-left" onclick={() => showExamples = !showExamples}>
+        <h3 class="text-sm font-semibold text-accent">Worked Examples</h3>
+        <span class="text-xs text-muted">{showExamples ? '▲' : '▼'}</span>
+      </button>
+      {#if showExamples}
+        <div class="space-y-8 text-sm text-muted">
+
+          <!-- Example 1.14 -->
+          <div class="space-y-3">
+            <h4 class="text-sm font-semibold text-primary">Example 1.14: <KaTeX math="f(x) = \\sqrt{x}" /></h4>
+            <p>Derivative:</p>
+            <KaTeX math={"f'(x) = \\frac{1}{2\\sqrt{x}}"} displayMode={true} />
+            <p>Condition number:</p>
+            <KaTeX
+              math={"\\kappa(x) = \\left|\\frac{x \\cdot f'(x)}{f(x)}\\right| = \\left|\\frac{x \\cdot \\frac{1}{2\\sqrt{x}}}{\\sqrt{x}}\\right| = \\left|\\frac{1}{2}\\right| = \\frac{1}{2} \\quad \\forall\\, x > 0"}
+              displayMode={true}
+            />
+            <div class="p-3 bg-bg-3 border border-border">
+              <p style="color: #10b981;">
+                <span class="font-semibold">Conclusion:</span> <KaTeX math="\\kappa = \\tfrac{1}{2} &lt; 1" /> — well-conditioned.
+                Square roots <em>reduce</em> relative error.
+              </p>
+            </div>
+          </div>
+
+          <!-- Example 1.15 -->
+          <div class="space-y-3">
+            <h4 class="text-sm font-semibold text-primary">
+              Example 1.15: <KaTeX math={"f(x) = \\dfrac{10}{1 - x^2}"} />
+            </h4>
+            <p>Derivative:</p>
+            <KaTeX math={"f'(x) = \\frac{20x}{(1 - x^2)^2}"} displayMode={true} />
+            <p>Condition number:</p>
+            <KaTeX
+              math={"\\kappa(x) = \\left|\\frac{x \\cdot f'(x)}{f(x)}\\right| = \\frac{2x^2}{|1 - x^2|}"}
+              displayMode={true}
+            />
+            <div class="space-y-2">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="p-3 bg-bg-3 border border-border text-center">
+                  <p class="font-mono text-xs text-muted mb-1">x = 0</p>
+                  <p class="font-semibold" style="color: #10b981;"><KaTeX math="\\kappa = 0" /></p>
+                  <p class="text-xs mt-1">Perfectly conditioned</p>
+                </div>
+                <div class="p-3 bg-bg-3 border border-border text-center">
+                  <p class="font-mono text-xs text-muted mb-1">x = 0.5</p>
+                  <p class="font-semibold" style="color: #10b981;"><KaTeX math={"\\kappa = \\tfrac{2}{3}"} /></p>
+                  <p class="text-xs mt-1">Well-conditioned</p>
+                </div>
+                <div class="p-3 bg-bg-3 border border-border text-center">
+                  <p class="font-mono text-xs text-muted mb-1">x = 0.99</p>
+                  <p class="font-semibold" style="color: #f87171;"><KaTeX math="\\kappa \\approx 98.5" /></p>
+                  <p class="text-xs mt-1">Ill-conditioned!</p>
+                </div>
+              </div>
+              <div class="p-3 bg-bg-3 border border-border">
+                <p>
+                  As <KaTeX math="|x| \\to 1" />, <KaTeX math="\\kappa \\to \\infty" /> — the function
+                  becomes arbitrarily ill-conditioned near the singularities <KaTeX math="x = \\pm 1" />.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary -->
+          <div class="p-3 bg-bg-3 border border-border space-y-1">
+            <p class="font-semibold text-primary">Summary</p>
+            <p><KaTeX math="\\kappa" /> small <KaTeX math="(\\approx 1)" /> — well-conditioned: output error stays bounded relative to input error.</p>
+            <p><KaTeX math="\\kappa" /> large <KaTeX math="(\\gg 1)" /> — ill-conditioned: small input perturbations cause large output changes.</p>
+          </div>
+
+        </div>
+      {/if}
     </Card>
   {/if}
 </section>

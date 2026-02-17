@@ -3,6 +3,7 @@
   import { Card, Button } from '$lib/components/ui';
 
   let show = $state(true);
+  let showExample = $state(false);
 
   type Preset = {
     label: string;
@@ -359,6 +360,61 @@
         {/if}
       </div>
 
+    </Card>
+
+    <Card class="space-y-4 mt-6">
+      <button class="w-full flex items-center justify-between text-left" onclick={() => showExample = !showExample}>
+        <h3 class="text-sm font-semibold text-accent">Worked Example 1.1</h3>
+        <span class="text-xs text-muted">{showExample ? '▲' : '▼'}</span>
+      </button>
+      {#if showExample}
+        <div class="space-y-4 text-sm">
+
+          <!-- Scratch Work -->
+          <div>
+            <h4 class="text-xs font-semibold text-primary mb-2">Scratch Work</h4>
+            <p class="text-muted mb-2">
+              Prove that <KaTeX math={"\\lim_{x \\to 1} x^2 = 1"} />.
+              We need to find <KaTeX math={"\\delta > 0"} /> such that <KaTeX math={"0 < |x - 1| < \\delta \\implies |x^2 - 1| < \\varepsilon"} />.
+            </p>
+            <KaTeX math={"|f(x) - L| = |x^2 - 1| = |x - 1||x + 1| < \\varepsilon"} displayMode={true} />
+            <p class="text-muted mb-2">
+              This means we need <KaTeX math={"|x - 1| < \\dfrac{\\varepsilon}{|x + 1|}"} />.
+              Since <KaTeX math={"x \\to 1"} />, assume <KaTeX math={"x \\in (0, 2)"} />, so <KaTeX math={"1 < x + 1 < 3"} />, meaning <KaTeX math={"|x + 1| < 3"} />.
+            </p>
+            <KaTeX math={"\\frac{1}{3} < \\frac{1}{|x+1|} \\implies \\frac{\\varepsilon}{3} < \\frac{\\varepsilon}{|x+1|}"} displayMode={true} />
+            <p class="text-muted">
+              Therefore it suffices to set <KaTeX math={"\\delta \\leq \\dfrac{\\varepsilon}{3}"} />.
+            </p>
+          </div>
+
+          <!-- Formal Proof -->
+          <div>
+            <h4 class="text-xs font-semibold text-primary mb-2">Formal Proof</h4>
+            <p class="text-muted mb-2">
+              Given <KaTeX math={"\\varepsilon > 0"} />, let <KaTeX math={"\\delta = \\dfrac{\\varepsilon}{3}"} />. Then whenever <KaTeX math={"0 < |x - 1| < \\delta"} />:
+            </p>
+            <KaTeX math={"|x - 1| < \\delta = \\frac{\\varepsilon}{3} < \\frac{\\varepsilon}{|x+1|} \\quad (\\text{since } |x+1| < 3)"} displayMode={true} />
+            <KaTeX math={"|x - 1|\\,|x + 1| < \\varepsilon"} displayMode={true} />
+            <KaTeX math={"|x^2 - 1| < \\varepsilon \\qquad \\blacksquare"} displayMode={true} />
+          </div>
+
+          <!-- Try This -->
+          <div class="border border-border rounded p-3 bg-[rgba(129,140,248,0.06)]">
+            <h4 class="text-xs font-semibold text-[#818cf8] mb-2">Try This</h4>
+            <p class="text-muted mb-2">
+              Prove that <KaTeX math={"\\lim_{x \\to 2}\\,(x^2 - 2x + 1) = 1"} />.
+            </p>
+            <p class="text-muted text-xs">
+              <span class="text-primary font-semibold">Hint:</span>{' '}
+              <KaTeX math={"|f(x) - 1| = |x^2 - 2x| = |x|\\,|x - 2|"} />.
+              Since <KaTeX math={"x \\to 2"} />, assume <KaTeX math={"x \\in (1, 3)"} /> so <KaTeX math={"|x| < 3"} />.
+              Set <KaTeX math={"\\delta \\leq \\dfrac{\\varepsilon}{3}"} />.
+            </p>
+          </div>
+
+        </div>
+      {/if}
     </Card>
   {/if}
 </section>

@@ -7,7 +7,9 @@
     SequenceAnalyzer,
     ConditionNumber,
     SeriesAnalyzer,
-    FloatingPointProof
+    FloatingPointProof,
+    LossOfSignificance,
+    PropagatedError
   } from '$lib/features/error-analysis';
 </script>
 
@@ -44,7 +46,17 @@
   <SeriesAnalyzer />
 </section>
 
-<section class="mb-12">
+<section class="mb-12 border-b border-border pb-12">
   <h2 class="text-xl font-bold text-primary mb-4">6. Floating-Point Arithmetic</h2>
   <FloatingPointProof />
+</section>
+
+<section class="mb-12 border-b border-border pb-12">
+  <h2 class="text-xl font-bold text-primary mb-4">7. Loss of Significance</h2>
+  <LossOfSignificance />
+</section>
+
+<section class="mb-12">
+  <h2 class="text-xl font-bold text-primary mb-4">8. Propagated Error & Stability</h2>
+  <PropagatedError />
 </section>

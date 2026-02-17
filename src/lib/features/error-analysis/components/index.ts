@@ -6,3 +6,5 @@ export { default as SequenceAnalyzer } from './SequenceAnalyzer.svelte';
 export { default as ConditionNumber } from './ConditionNumber.svelte';
 export { default as SeriesAnalyzer } from './SeriesAnalyzer.svelte';
 export { default as FloatingPointProof } from './FloatingPointProof.svelte';
+export { default as LossOfSignificance } from './LossOfSignificance.svelte';
+export { default as PropagatedError } from './PropagatedError.svelte';

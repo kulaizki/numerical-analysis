@@ -235,6 +235,87 @@
 - [x] Limits proof helper (epsilon-delta visualization)
 - [x] Floating-point arithmetic proof walkthrough (fl(x) = (1-ε)x)
 
+## Phase 12: Lecture Alignment — Worked Examples & Problem Sets
+
+### Math Preliminaries — Worked Examples
+Add expandable "Worked Example" sections to existing visualizer components with
+step-by-step solutions matching the professor's lecture examples.
+
+- [x] Epsilon-delta proof walkthrough (Example 1.1: prove lim(x→1) x²=1)
+  - [x] Scratch work phase (bounding |x+1| < 3 when x ∈ [0,2])
+  - [x] Formal proof phase (set δ ≤ ε/3, show |x²−1| < ε)
+  - [x] Visualization synced to proof steps (ε/δ bands on canvas)
+- [x] IVT worked example (Example 1.2: x³−3x²−2x+9 = 0)
+  - [x] Step 1: evaluate f(−2)=−7, f(−1)=7
+  - [x] Step 2: verify continuity + sign change → root in [−2,−1]
+  - [x] Visualization highlighting the root interval
+- [x] Rolle's Theorem worked example (Example 1.3: f(x)=x⁴−2x² on [−2,2])
+  - [x] Verify f(−2)=f(2)=8
+  - [x] Solve f'(ξ)=4ξ³−4ξ=0 → ξ=−1,0,1
+  - [x] Show all three tangent lines on graph
+- [x] MVT worked example (Example 1.4: f(x)=x³+2x²−x on [−1,2])
+  - [x] Compute secant slope (f(2)−f(−1))/(2−(−1)) = 4
+  - [x] Solve 3ξ²+4ξ−1=4 → ξ=(−4+√76)/6 ≈ 0.7863
+  - [x] Show secant + tangent on graph
+- [x] Integral MVT worked example (Example 1.5: f(x)=3x²−2x on [1,4])
+  - [x] Compute ∫₁⁴(3x²−2x)dx = 48
+  - [x] Solve 9ξ²−6ξ=48 → ξ=8/3 ∈ [1,4]
+  - [x] Show rectangle area matching integral area
+- [x] Taylor worked example (Example 1.6: f(x)=∛x at x₀=8)
+  - [x] Build p₁ and p₂ step by step (derivatives at x=8)
+  - [x] Estimate ∛11 using p₁ (2.25) and p₂ (2.21875)
+  - [x] Error bounds R₂ and R₃ with maximum derivative analysis
+  - [x] Compare estimates vs actual ∛11 ≈ 2.22398
+
+### Error Analysis — Worked Examples
+- [x] Significant digits worked examples (Example 1.10)
+  - [x] x=1/3, xA=0.333 → 3 significant digits (show formula)
+  - [x] x=0.02138, xA=0.02144 → 2 significant digits (why not 3)
+- [x] Loss of significance examples (Examples 1.11–1.13)
+  - [x] Subtraction of nearly equal numbers: x=7.6545428, y=7.6544201
+  - [x] Show relative error amplification (Er(zA) ≈ 53736 × Er(xA))
+  - [x] f(x)=x(√(x+1)−√x) evaluation at x=100000
+- [x] Condition number worked examples (Examples 1.14–1.15)
+  - [x] f(x)=√x → κ=1/2 (well-conditioned for all x)
+  - [x] f(x)=10/(1−x²) → κ=2x²/|1−x²| (ill-conditioned near x=±1)
+- [x] Stability analysis example (Example 1.16: f(x)=√(x+1)−√x)
+  - [x] 3-digit rounding at x=12345 → 22% relative error
+  - [x] Demonstrate instability step identification
+- [x] Propagated error theory card
+  - [x] MVT-based derivation: f(x)−f(xA) ≈ f'(x)(x−xA)
+  - [x] Relative error formula: Er(f(x)) = [xf'(x)/f(x)] · Er(x)
+  - [x] Connection to condition number
+
+### Error Analysis — Missing Sub-topics
+- [x] Normalization demo
+  - [x] Interactive: enter a number, toggle normalized/non-normalized form
+  - [x] Examples: 6.238 = 0.6238×10¹ (normalized), −0.0014 = 0.0014×10⁰ (not) vs 0.14×10⁻² (normalized)
+- [x] Overflow/underflow demo
+  - [x] Show exponent range limits (m < e < M)
+  - [x] Interactive: enter extreme numbers, see NaN/Inf/0 behavior
+  - [x] IEEE 754 single vs double precision limits
+
+### Problem Set 1 (Professor's Homework)
+Add these as a dedicated problem set in the practice system with full step-by-step solutions.
+
+- [x] Problem 1: Prove lim(x→−1) 2x+1 = −1 (epsilon-delta)
+- [x] Problem 2: MVT for f(x)=x³−4x²−2x−5 on [−10,10], find all c values
+- [x] Problem 3: Integral MVT for f(x)=2eˣ on [−1,1], find c
+- [x] Problem 4: Taylor for cos(x) at x=π
+  - [x] (a) Find 4th Taylor polynomial
+  - [x] (b) Approximate cos(0)
+  - [x] (c) Bound the error
+- [x] Problem 5: Prove fl(x) = (1−ε)x
+- [x] Problem 6: Significant digits + relative error
+  - [x] (a) x=451.01, xA=451.023
+  - [x] (b) x=−0.04518, xA=−0.045113
+  - [x] (c) x=23.4604, xA=23.4213
+- [x] Problem 7: Condition numbers
+  - [x] (a) f(x)=2x²
+  - [x] (b) f(x)=2πx
+  - [x] (c) f(x)=2bx
+- [x] Problem 8: Series convergence — Σ(1/2ⁿ) from n=1 to ∞ (geometric, sum=1)
+
 ## Decisions
 
 - **No landing page** — straight into the app with sidebar nav

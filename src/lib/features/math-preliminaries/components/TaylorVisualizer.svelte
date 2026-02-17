@@ -292,6 +292,8 @@
   let polyLatex = $derived(buildPolyLatex(selectedFn, Number(centerA), taylorDegree));
 
   const FN_KEYS: FnKey[] = ['sin', 'cos', 'exp', 'ln1p', 'geo'];
+
+  let showExample = $state(false);
 </script>
 
 <section id="taylor" class="space-y-4">
@@ -477,6 +479,124 @@
             <li>1/(1-x): <KaTeX math={'M = (n+1)! \\ / \\ |1 - \\max\\xi|^{n+2}'} /></li>
           </ul>
         </div>
+      </div>
+      <!-- Worked Example 1.6 -->
+      <div>
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-semibold text-primary">Worked Example 1.6</h3>
+          <Button variant="ghost" size="sm" onclick={() => showExample = !showExample}>
+            {showExample ? 'Hide' : 'Show'}
+          </Button>
+        </div>
+
+        {#if showExample}
+          <div class="mt-3 space-y-5">
+            <!-- Header -->
+            <p class="text-xs text-muted">
+              Approximate <KaTeX math={'f(x) = x^{1/3}'} /> near <KaTeX math={'x_0 = 8'} /> using Taylor polynomials of degree 1 and 2, then estimate <KaTeX math={'\\sqrt[3]{11}'} /> with error bounds.
+            </p>
+
+            <!-- Part 1 -->
+            <div>
+              <p class="text-xs font-semibold text-accent mb-2">Part 1 — Build the polynomials</p>
+              <p class="text-xs text-muted mb-1">Compute derivatives and evaluate at <KaTeX math={'x_0 = 8'} />:</p>
+              <KaTeX
+                math={"f(x) = x^{1/3}, \\quad f(8) = 2"}
+                displayMode={true}
+              />
+              <KaTeX
+                math={"f'(x) = \\tfrac{1}{3}x^{-2/3}, \\quad f'(8) = \\tfrac{1}{12}"}
+                displayMode={true}
+              />
+              <KaTeX
+                math={"f''(x) = -\\tfrac{2}{9}x^{-5/3}, \\quad f''(8) = -\\tfrac{1}{144}"}
+                displayMode={true}
+              />
+              <KaTeX
+                math={"f'''(x) = \\tfrac{10}{27}x^{-8/3}, \\quad f'''(8) = \\tfrac{5}{3456}"}
+                displayMode={true}
+              />
+              <p class="text-xs text-muted mt-2 mb-1">The degree-1 and degree-2 Taylor polynomials are:</p>
+              <KaTeX
+                math={"p_1(x) = 2 + \\tfrac{1}{12}(x - 8)"}
+                displayMode={true}
+              />
+              <KaTeX
+                math={"p_2(x) = 2 + \\tfrac{1}{12}(x - 8) - \\tfrac{1}{288}(x - 8)^2"}
+                displayMode={true}
+              />
+            </div>
+
+            <!-- Part 2 -->
+            <div>
+              <p class="text-xs font-semibold text-accent mb-2">Part 2 — Estimate <KaTeX math={'\\sqrt[3]{11}'} /></p>
+              <p class="text-xs text-muted mb-1">Evaluate at <KaTeX math={'x = 11'} /> (so <KaTeX math={'x - 8 = 3'} />):</p>
+              <KaTeX
+                math={"p_1(11) = 2 + \\tfrac{1}{12}(3) = 2.25"}
+                displayMode={true}
+              />
+              <KaTeX
+                math={"p_2(11) = 2 + 0.25 - \\tfrac{9}{288} = 2.21875"}
+                displayMode={true}
+              />
+              <div class="border border-border-strong bg-bg p-3 text-xs font-mono mt-2 space-y-1">
+                <div class="flex justify-between">
+                  <span class="text-muted">p₁(11)</span>
+                  <span class="text-primary">2.25000</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-muted">p₂(11)</span>
+                  <span class="text-primary">2.21875</span>
+                </div>
+                <div class="flex justify-between border-t border-border pt-1 mt-1">
+                  <span class="text-muted">Actual ∛11</span>
+                  <span class="text-accent">≈ 2.22398</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Part 3 -->
+            <div>
+              <p class="text-xs font-semibold text-accent mb-2">Part 3 — Error bounds via Lagrange remainder</p>
+              <p class="text-xs text-muted mb-1">
+                On the interval <KaTeX math={'(8, 11)'} />, each derivative is maximised at the left endpoint <KaTeX math={'\\xi = 8'} /> (since the magnitude decreases as <KaTeX math={'x'} /> grows).
+              </p>
+              <p class="text-xs text-muted mt-2 mb-1">Remainder after <KaTeX math={'p_2'} /> (using <KaTeX math={"f'''"} />):</p>
+              <KaTeX
+                math={"\\left|R_2(11)\\right| \\leq \\frac{\\left|f''(8)\\right|}{2!}\\cdot|11-8|^2 = \\frac{1/144}{2}\\cdot 9 \\approx 0.03125"}
+                displayMode={true}
+              />
+              <p class="text-xs text-muted mt-2 mb-1">Remainder after <KaTeX math={'p_3'} /> (using <KaTeX math={"f^{(4)}"} />):</p>
+              <KaTeX
+                math={"\\left|R_3(11)\\right| \\leq \\frac{f'''(8)}{3!}\\cdot|11-8|^3 = \\frac{5/3456}{6}\\cdot 27 \\approx 0.00651"}
+                displayMode={true}
+              />
+              <p class="text-xs text-muted mt-2">
+                The actual error <KaTeX math={"|\\sqrt[3]{11} - p_2(11)| \\approx 0.00523"} /> is well within the bound of 0.03125.
+              </p>
+            </div>
+
+            <!-- Try This -->
+            <div class="border-l-2 border-accent pl-4">
+              <p class="text-xs font-semibold text-primary mb-1">Try This</p>
+              <p class="text-xs text-muted mb-2">
+                Approximate <KaTeX math={"\\sin(x)"} /> near <KaTeX math={"x = 0"} /> using a 3rd-degree Taylor polynomial. What is <KaTeX math={"p_3(x)"} />?
+              </p>
+              <details class="text-xs">
+                <summary class="cursor-pointer text-accent hover:underline select-none">Show answer</summary>
+                <div class="mt-2">
+                  <KaTeX
+                    math={"p_3(x) = x - \\frac{x^3}{6}"}
+                    displayMode={true}
+                  />
+                  <p class="text-muted mt-1">
+                    Since all even derivatives of <KaTeX math={"\\sin"} /> vanish at 0 and the odd ones alternate ±1, only the <KaTeX math={"x"} /> and <KaTeX math={"x^3/3!"} /> terms survive.
+                  </p>
+                </div>
+              </details>
+            </div>
+          </div>
+        {/if}
       </div>
     </Card>
   {/if}

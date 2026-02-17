@@ -284,5 +284,84 @@ export const problemTemplates: Problem[] = [
     ],
     correctAnswer: '$f(a) + f\'(a)(x-a) + \\cdots$',
     explanation: 'Taylor series: $f(x) = f(a) + f\'(a)(x-a) + \\frac{f\'\'(a)}{2!}(x-a)^2 + \\cdots$'
+  },
+
+  // Problem Set 1
+  {
+    id: 'ps1-1',
+    topicId: 'math-preliminaries',
+    difficulty: 'advanced',
+    question: 'In the $\\varepsilon$-$\\delta$ proof that $\\lim_{x \\to -1}(2x+1) = -1$, what is $\\delta$ in terms of $\\varepsilon$?',
+    type: 'multiple-choice',
+    options: ['$\\delta = \\varepsilon/2$', '$\\delta = \\varepsilon$', '$\\delta = 2\\varepsilon$', '$\\delta = \\varepsilon/3$'],
+    correctAnswer: '$\\delta = \\varepsilon/2$',
+    explanation: '$|2x+1-(-1)| = |2x+2| = 2|x+1| < \\varepsilon \\Rightarrow |x+1| < \\varepsilon/2$. Set $\\delta = \\varepsilon/2$.'
+  },
+  {
+    id: 'ps1-2',
+    topicId: 'math-preliminaries',
+    difficulty: 'intermediate',
+    question: 'For $f(x) = x^3 - 4x^2 - 2x - 5$ on $[-10,10]$, what is the MVT secant slope $\\frac{f(10)-f(-10)}{20}$?',
+    type: 'numeric',
+    correctAnswer: 98,
+    explanation: '$f(10)=575$, $f(-10)=-1385$. Slope $= 1960/20 = 98$.'
+  },
+  {
+    id: 'ps1-3',
+    topicId: 'math-preliminaries',
+    difficulty: 'intermediate',
+    question: 'Find $c$ satisfying MVT for integrals for $f(x)=2e^x$ on $[-1,1]$ (round to 4 decimals).',
+    type: 'numeric',
+    correctAnswer: 0.1614,
+    explanation: '$\\int_{-1}^{1}2e^x dx = 2(e-e^{-1}) \\approx 4.7008$. $2e^c \\cdot 2 = 4.7008 \\Rightarrow c = \\ln(1.1752) \\approx 0.1614$.'
+  },
+  {
+    id: 'ps1-4',
+    topicId: 'math-preliminaries',
+    difficulty: 'advanced',
+    question: 'Using the 4th Taylor polynomial for $\\cos(x)$ centered at $x=\\pi$, what is $p_4(0)$ approximately?',
+    type: 'multiple-choice',
+    options: ['$-0.124$', '$0.976$', '$1.000$', '$-1.000$'],
+    correctAnswer: '$-0.124$',
+    explanation: '$p_4(x)=-1+\\frac{(x-\\pi)^2}{2}-\\frac{(x-\\pi)^4}{24}$. $p_4(0)=-1+\\pi^2/2-\\pi^4/24 \\approx -0.124$.'
+  },
+  {
+    id: 'ps1-5',
+    topicId: 'error-analysis',
+    difficulty: 'advanced',
+    question: 'If $\\varepsilon$ is the relative error in $\\text{fl}(x)$, which identity holds?',
+    type: 'multiple-choice',
+    options: ['$\\text{fl}(x) = (1+\\varepsilon)x$', '$\\text{fl}(x) = (1-\\varepsilon)x$', '$\\text{fl}(x) = x+\\varepsilon$', '$\\text{fl}(x) = x/\\varepsilon$'],
+    correctAnswer: '$\\text{fl}(x) = (1-\\varepsilon)x$',
+    explanation: '$\\varepsilon = (x - \\text{fl}(x))/x \\Rightarrow \\text{fl}(x) = x - \\varepsilon x = (1-\\varepsilon)x$.'
+  },
+  {
+    id: 'ps1-6',
+    topicId: 'error-analysis',
+    difficulty: 'intermediate',
+    question: 'For $x=-0.04518$, $x_A=-0.045113$, how many significant digits does $x_A$ have?',
+    type: 'multiple-choice',
+    options: ['1', '2', '3', '4'],
+    correctAnswer: '2',
+    explanation: '$|x-x_A|=0.000067$. $10^{-2}<|x|$, so $s=-2$. $0.000067 \\leq 0.0005$ (r=2 ✓) but $0.000067 > 0.00005$ (r=3 ✗). So $r=2$.'
+  },
+  {
+    id: 'ps1-7',
+    topicId: 'error-analysis',
+    difficulty: 'intermediate',
+    question: 'What is the condition number of $f(x)=2x^2$?',
+    type: 'multiple-choice',
+    options: ['$1$', '$2$', '$4x$', '$\\frac{1}{2}$'],
+    correctAnswer: '$2$',
+    explanation: '$f\'(x)=4x$. $\\kappa=|xf\'(x)/f(x)|=|4x^2/(2x^2)|=2$.'
+  },
+  {
+    id: 'ps1-8',
+    topicId: 'math-preliminaries',
+    difficulty: 'basic',
+    question: 'The geometric series $\\sum_{n=1}^{\\infty}\\frac{1}{2^n}$ converges. What is its sum?',
+    type: 'numeric',
+    correctAnswer: 1,
+    explanation: 'Geometric series with $a=1/2$, $r=1/2$. Sum $= \\frac{a}{1-r}=\\frac{1/2}{1/2}=1$.'
   }
 ];

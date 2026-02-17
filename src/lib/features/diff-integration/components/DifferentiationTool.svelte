@@ -188,7 +188,7 @@
       <!-- Controls -->
       <div class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-muted mb-1">Function <KaTeX math="f(x)" /></label>
+          <span class="block text-sm font-medium text-muted mb-1">Function <KaTeX math="f(x)" /></span>
           <Input
             type="text"
             bind:value={diffFunc}
@@ -198,9 +198,9 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-muted mb-1">
+          <span class="block text-sm font-medium text-muted mb-1">
             Point x = {diffX.toFixed(4)}
-          </label>
+          </span>
           <input
             type="range"
             bind:value={diffX}
@@ -212,9 +212,9 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-muted mb-1">
+          <span class="block text-sm font-medium text-muted mb-1">
             Step size h = {diffH.toFixed(4)}
-          </label>
+          </span>
           <input
             type="range"
             bind:value={diffH}

@@ -260,9 +260,9 @@
         <h3 class="text-sm font-semibold text-primary mb-3">Interactive Visualization</h3>
 
         <div class="mb-4 space-y-2">
-          <label class="block text-xs text-muted mb-1">
+          <span class="block text-xs text-muted mb-1">
             Custom function <span class="text-tertiary">(press Enter or Apply)</span>
-          </label>
+          </span>
           <div class="flex gap-2">
             <input
               type="text"

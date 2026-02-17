@@ -125,7 +125,7 @@
     formulaLabel: string;
   };
 
-  const propagationResult = $derived<PropagationResult | null>(() => {
+  const propagationResult: PropagationResult | null = $derived.by(() => {
     const x = parseFloat(calcX);
     const y = parseFloat(calcY);
     const rhox = parseFloat(calcRhoX);

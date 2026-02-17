@@ -14,7 +14,7 @@
 </script>
 
 <svelte:head>
-  <title>Error Analysis | numerilab</title>
+  <title>Error Analysis | Numerical Analysis</title>
 </svelte:head>
 
 <h1 class="text-2xl font-bold text-primary mb-2">Error Analysis</h1>

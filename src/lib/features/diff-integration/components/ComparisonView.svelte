@@ -100,7 +100,7 @@
 
     <div class="space-y-4">
       <div>
-        <label class="block text-sm font-medium text-muted mb-1">Function <KaTeX math="f(x)" /></label>
+        <span class="block text-sm font-medium text-muted mb-1">Function <KaTeX math="f(x)" /></span>
         <Input
           type="text"
           bind:value={compareFunc}
@@ -111,7 +111,7 @@
 
       <div class="grid grid-cols-3 gap-4">
         <div>
-          <label class="block text-sm font-medium text-muted mb-1">Lower bound a</label>
+          <span class="block text-sm font-medium text-muted mb-1">Lower bound a</span>
           <Input
             type="number"
             bind:value={compareA}
@@ -120,7 +120,7 @@
           />
         </div>
         <div>
-          <label class="block text-sm font-medium text-muted mb-1">Upper bound b</label>
+          <span class="block text-sm font-medium text-muted mb-1">Upper bound b</span>
           <Input
             type="number"
             bind:value={compareB}
@@ -129,7 +129,7 @@
           />
         </div>
         <div>
-          <label class="block text-sm font-medium text-muted mb-1">Exact integral</label>
+          <span class="block text-sm font-medium text-muted mb-1">Exact integral</span>
           <Input
             type="number"
             bind:value={compareExact}

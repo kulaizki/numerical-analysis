@@ -344,7 +344,7 @@
 
       <div class="space-y-3">
         <div class="flex items-center gap-4">
-          <label class="w-20 text-tertiary">x₁ =</label>
+          <span class="w-20 text-tertiary">x₁ =</span>
           <Input
             type="number"
             step="0.01"
@@ -353,7 +353,7 @@
           />
         </div>
         <div class="flex items-center gap-4">
-          <label class="w-20 text-tertiary">x₂ =</label>
+          <span class="w-20 text-tertiary">x₂ =</span>
           <Input
             type="number"
             step="0.01"
@@ -362,7 +362,7 @@
           />
         </div>
         <div class="flex items-center gap-4">
-          <label class="w-20 text-tertiary">x₃ =</label>
+          <span class="w-20 text-tertiary">x₃ =</span>
           <Input
             type="number"
             step="0.01"

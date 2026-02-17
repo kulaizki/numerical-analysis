@@ -395,9 +395,9 @@
 
         <!-- Degree slider -->
         <div class="mt-4">
-          <label class="block text-xs text-muted mb-2">
+          <span class="block text-xs text-muted mb-2">
             Polynomial degree n = {taylorDegree}
-          </label>
+          </span>
           <input
             type="range"
             min="0"

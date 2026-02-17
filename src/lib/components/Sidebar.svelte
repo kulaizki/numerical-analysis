@@ -64,7 +64,7 @@
       {/if}
     </svg>
   </button>
-  <a href="/" class="ml-3 font-mono font-bold text-accent text-sm">numerilab</a>
+  <a href="/" class="ml-3 font-mono font-bold text-accent text-sm">Numerical Analysis</a>
 </div>
 
 <!-- Backdrop -->

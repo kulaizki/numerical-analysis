@@ -83,9 +83,9 @@
 <Card class="mb-6">
   <h3 class="text-lg font-semibold text-primary mb-4">Convergence Visualization</h3>
   <div class="mb-4">
-    <label class="block text-sm text-muted mb-2">
+    <span class="block text-sm text-muted mb-2">
       Number of iterations: {iterations}
-    </label>
+    </span>
     <input
       type="range"
       bind:value={iterations}

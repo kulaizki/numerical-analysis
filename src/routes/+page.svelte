@@ -1,5 +1,5 @@
 <svelte:head>
-  <title>numerilab</title>
+  <title>Interactive Numerical Analysis</title>
 </svelte:head>
 
 <script lang="ts">
@@ -95,67 +95,48 @@
   ];
 </script>
 
-<div class="container mx-auto px-4 py-12 max-w-6xl">
-  <!-- Header -->
-  <div class="text-center mb-12">
-    <h1 class="text-5xl md:text-6xl font-bold text-accent font-mono mb-4">numerilab</h1>
-    <p class="text-xl text-muted mb-6">Interactive Numerical Analysis</p>
-    <p class="text-muted max-w-2xl mx-auto leading-relaxed">
-      Explore computational methods for solving mathematical problems.
-      Interactive visualizations, step-by-step explanations, and hands-on practice
-      for numerical techniques in scientific computing.
-    </p>
+<div class="max-w-5xl mx-auto px-6 py-10 min-h-screen flex flex-col justify-center">
+  <div class="text-center mb-8">
+    <h1 class="text-3xl md:text-4xl font-bold text-accent font-mono mb-2">Interactive Numerical Analysis</h1>
+    <p class="text-muted text-sm">Interactive visualizations and step-by-step solvers for numerical methods.</p>
   </div>
 
-  <!-- Sections Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
     {#each sections as section}
-      <Card class="p-6 hover:border-accent transition-all duration-200">
-        <div class="flex items-center gap-3 mb-4">
+      <Card class="p-5 hover:border-accent/50 transition-all duration-200">
+        <div class="flex items-center gap-2 mb-3">
           <div
-            class="w-3 h-3 rounded-full"
+            class="w-2.5 h-2.5 rounded-full"
             style="background-color: {section.color};"
           ></div>
-          <h2 class="text-xl font-semibold text-primary">
+          <h2 class="text-base font-semibold text-primary">
             Section {section.number}: {section.title}
           </h2>
         </div>
 
-        <ul class="space-y-3">
+        <div class="space-y-2">
           {#each section.topics as topic}
-            <li>
-              <a
-                href={topic.path}
-                class="block hover:text-accent transition-colors duration-150"
-              >
-                <div class="text-sm font-medium text-primary">{topic.title}</div>
-                <div class="text-xs text-muted mt-1">{topic.description}</div>
-              </a>
-            </li>
+            <a
+              href={topic.path}
+              class="block hover:text-accent transition-colors duration-150"
+            >
+              <div class="text-sm font-medium text-primary">{topic.title}</div>
+              <div class="text-xs text-muted">{topic.description}</div>
+            </a>
           {/each}
-        </ul>
+        </div>
       </Card>
     {/each}
   </div>
 
-  <!-- Quick Links -->
-  <div class="border-t border-border pt-8">
-    <h3 class="text-lg font-semibold text-primary mb-4 text-center">Quick Access</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-      {#each quickLinks as link}
-        <a href={link.path}>
-          <Card class="p-4 hover:border-accent transition-all duration-200 text-center">
-            <h4 class="font-semibold text-primary mb-1">{link.title}</h4>
-            <p class="text-sm text-muted">{link.description}</p>
-          </Card>
-        </a>
-      {/each}
-    </div>
+  <div class="flex justify-center gap-3">
+    {#each quickLinks as link}
+      <a
+        href={link.path}
+        class="px-4 py-2 text-sm font-medium text-muted border border-border hover:text-accent hover:border-accent transition-colors duration-150"
+      >
+        {link.title}
+      </a>
+    {/each}
   </div>
 </div>
-
-<style>
-  :global(body) {
-    min-height: 100vh;
-  }
-</style>

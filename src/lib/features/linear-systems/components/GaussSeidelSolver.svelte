@@ -372,7 +372,7 @@
 
       <div class="space-y-3">
         <div class="flex items-center gap-4">
-          <label class="text-tertiary">Number of iterations:</label>
+          <span class="text-tertiary">Number of iterations:</span>
           <Input
             type="number"
             bind:value={seidelPracticeUserIter}

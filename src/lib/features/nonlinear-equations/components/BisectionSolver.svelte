@@ -100,7 +100,8 @@
     for (let i = 0; i < 20; i++) {
       step();
       await new Promise(resolve => setTimeout(resolve, 300));
-      if (iterations[iterations.length - 1].error < toleranceInput) break;
+      const last = iterations[iterations.length - 1];
+      if (last.error < toleranceInput && Math.abs(last.fc) < toleranceInput) break;
     }
     running = false;
   }
@@ -237,9 +238,9 @@
         <h3 class="text-lg font-medium text-primary mb-3">Interactive Visualizer</h3>
 
         <div class="mb-4 space-y-2">
-          <label class="block text-xs text-muted mb-1">
+          <span class="block text-xs text-muted mb-1">
             Custom function <span class="text-tertiary">(press Enter or Apply)</span>
-          </label>
+          </span>
           <div class="flex gap-2 items-end">
             <div class="flex-1">
               <div class="flex gap-1 items-center">
@@ -276,7 +277,7 @@
 
         <div class="grid grid-cols-3 gap-4 mb-4">
           <div>
-            <label class="text-sm text-muted mb-1 block">Initial a</label>
+            <span class="text-sm text-muted mb-1 block">Initial a</span>
             <Input
               type="number"
               bind:value={bisectA}
@@ -285,7 +286,7 @@
             />
           </div>
           <div>
-            <label class="text-sm text-muted mb-1 block">Initial b</label>
+            <span class="text-sm text-muted mb-1 block">Initial b</span>
             <Input
               type="number"
               bind:value={bisectB}
@@ -294,7 +295,7 @@
             />
           </div>
           <div>
-            <label class="text-sm text-muted mb-1 block">Tolerance ε</label>
+            <span class="text-sm text-muted mb-1 block">Tolerance ε</span>
             <Input
               type="number"
               bind:value={toleranceInput}
@@ -313,7 +314,7 @@
         </div>
 
         <div class="flex gap-2 mb-4">
-          <Button onclick={step} disabled={running || (iterations.length > 0 && iterations[iterations.length - 1].error < toleranceInput)}>
+          <Button onclick={step} disabled={running || (iterations.length > 0 && iterations[iterations.length - 1].error < toleranceInput && Math.abs(iterations[iterations.length - 1].fc) < toleranceInput)}>
             Step
           </Button>
           <Button onclick={runAll} disabled={running}>
@@ -351,6 +352,18 @@
               </tbody>
             </table>
           </div>
+
+          {#if iterations.length >= 20 || (iterations[iterations.length - 1].error < toleranceInput && Math.abs(iterations[iterations.length - 1].fc) >= toleranceInput)}
+            <div class="mt-3 p-3 bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm">
+              <strong>Warning:</strong> Step size converged but |f(x)| = {Math.abs(iterations[iterations.length - 1].fc).toFixed(6)} is not near zero. The method may have stagnated at a non-root. Try different starting points.
+            </div>
+          {/if}
+
+          {#if iterations[iterations.length - 1].error < toleranceInput && Math.abs(iterations[iterations.length - 1].fc) < toleranceInput}
+            <div class="mt-3 p-3 bg-green-500/10 border border-green-500/30 text-green-400 text-sm">
+              Converged to root x ≈ {iterations[iterations.length - 1].c.toFixed(6)} in {iterations.length} iterations.
+            </div>
+          {/if}
 
           <div class="h-64">
             <Chart

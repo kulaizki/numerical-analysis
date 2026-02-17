@@ -35,7 +35,7 @@
   });
 
   // === CANVAS ===
-  let inverseCanvas: HTMLCanvasElement;
+  let inverseCanvas: HTMLCanvasElement | undefined = $state();
 
   // === LOGIC ===
   function runInversePowerMethod() {

@@ -20,7 +20,7 @@
 </script>
 
 <svelte:head>
-  <title>Nonlinear Equations | numerilab</title>
+  <title>Nonlinear Equations | Numerical Analysis</title>
 </svelte:head>
 
 <div class="space-y-6">

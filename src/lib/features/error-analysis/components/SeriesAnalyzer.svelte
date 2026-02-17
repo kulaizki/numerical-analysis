@@ -144,7 +144,7 @@
   let parseError = $state('');
 
   // Chart canvas ref
-  let canvas: HTMLCanvasElement;
+  let canvas: HTMLCanvasElement | undefined = $state();
   let chartInstance: Chart | null = null;
 
   // ── derived computation ────────────────────────────────────────────────────
@@ -377,9 +377,9 @@
 
             {#if PRESETS[activePreset].hasParam}
               <div class="mt-3">
-                <label class="block text-xs text-muted mb-1">
+                <span class="block text-xs text-muted mb-1">
                   {PRESETS[activePreset].paramLabel} = {presetParam.toFixed(2)}
-                </label>
+                </span>
                 <input
                   type="range"
                   bind:value={presetParam}
@@ -431,9 +431,9 @@
 
       <!-- ── Controls ───────────────────────────────────────────────────────── -->
       <div>
-        <label class="block text-sm text-muted mb-1">
+        <span class="block text-sm text-muted mb-1">
           Number of terms N = {numTerms}
-        </label>
+        </span>
         <input
           type="range"
           bind:value={numTerms}

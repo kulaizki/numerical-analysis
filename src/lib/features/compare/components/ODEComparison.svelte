@@ -159,7 +159,7 @@
     <h3 class="text-lg font-semibold text-primary mb-4">Configuration</h3>
 
     <div class="mb-4">
-      <label class="block text-sm text-muted mb-2">ODE</label>
+      <span class="block text-sm text-muted mb-2">ODE</span>
       <select
         bind:value={odeFuncIndex}
         class="w-full bg-bg-3 text-primary border border-border px-3 py-2 text-sm focus:outline-none focus:border-accent"
@@ -182,7 +182,7 @@
     <Input type="number" label="Step size h" bind:value={odeH} step="0.01" class="mb-4" mono />
 
     <div class="mb-4">
-      <label class="block text-sm text-muted mb-2">Select Methods</label>
+      <span class="block text-sm text-muted mb-2">Select Methods</span>
       <div class="space-y-2">
         <label class="flex items-center gap-2 text-sm text-primary cursor-pointer">
           <input type="checkbox" bind:checked={selectedOdeMethods.euler} class="accent-accent" />

@@ -149,7 +149,7 @@
       <!-- Controls -->
       <div class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-muted mb-1">Function <KaTeX math="f(x)" /></label>
+          <span class="block text-sm font-medium text-muted mb-1">Function <KaTeX math="f(x)" /></span>
           <Input
             type="text"
             bind:value={trapFunc}
@@ -160,7 +160,7 @@
 
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-muted mb-1">Lower bound a</label>
+            <span class="block text-sm font-medium text-muted mb-1">Lower bound a</span>
             <Input
               type="number"
               bind:value={trapA}
@@ -169,7 +169,7 @@
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-muted mb-1">Upper bound b</label>
+            <span class="block text-sm font-medium text-muted mb-1">Upper bound b</span>
             <Input
               type="number"
               bind:value={trapB}
@@ -180,9 +180,9 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-muted mb-1">
+          <span class="block text-sm font-medium text-muted mb-1">
             Number of panels n = {trapN}
-          </label>
+          </span>
           <input
             type="range"
             bind:value={trapN}
@@ -194,7 +194,7 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-muted mb-1">Exact integral</label>
+          <span class="block text-sm font-medium text-muted mb-1">Exact integral</span>
           <Input
             type="number"
             bind:value={trapExactIntegral}

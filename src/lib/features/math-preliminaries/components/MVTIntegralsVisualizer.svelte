@@ -353,7 +353,7 @@
         </div>
         <div class="flex gap-2 items-end">
           <div class="flex-1">
-            <label class="block text-xs text-muted mb-1">Custom f(x) =</label>
+            <span class="block text-xs text-muted mb-1">Custom f(x) =</span>
             <input
               type="text"
               bind:value={funcInputValue}

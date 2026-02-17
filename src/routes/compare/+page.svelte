@@ -27,36 +27,38 @@
 </script>
 
 <svelte:head>
-  <title>Compare Methods | numerilab</title>
+  <title>Compare Methods | Numerical Analysis</title>
 </svelte:head>
 
-<div class="container mx-auto px-4 py-12 max-w-7xl">
+<div class="space-y-6">
   <!-- Header -->
-  <div class="mb-8">
-    <h1 class="text-4xl font-bold text-accent font-mono mb-2">Method Comparison Sandbox</h1>
+  <div>
+    <h1 class="text-2xl font-bold text-primary mb-2">Method Comparison Sandbox</h1>
     <p class="text-muted">Compare numerical methods side-by-side with interactive visualizations</p>
   </div>
 
   <!-- Category Tabs -->
-  <div class="flex gap-2 mb-8 border-b border-border">
-    <button
-      onclick={() => activeCategory = 'root-finding'}
-      class="px-4 py-2 text-sm font-medium transition-colors duration-150 border-b-2 {activeCategory === 'root-finding' ? 'border-accent text-accent' : 'border-transparent text-muted hover:text-primary'}"
-    >
-      Root Finding
-    </button>
-    <button
-      onclick={() => activeCategory = 'integration'}
-      class="px-4 py-2 text-sm font-medium transition-colors duration-150 border-b-2 {activeCategory === 'integration' ? 'border-accent text-accent' : 'border-transparent text-muted hover:text-primary'}"
-    >
-      Integration
-    </button>
-    <button
-      onclick={() => activeCategory = 'odes'}
-      class="px-4 py-2 text-sm font-medium transition-colors duration-150 border-b-2 {activeCategory === 'odes' ? 'border-accent text-accent' : 'border-transparent text-muted hover:text-primary'}"
-    >
-      ODEs
-    </button>
+  <div class="border-b border-border">
+    <div class="flex gap-6 overflow-x-auto">
+      <button
+        onclick={() => activeCategory = 'root-finding'}
+        class="px-4 py-2 font-medium transition-colors {activeCategory === 'root-finding' ? 'border-b-2 border-accent text-accent' : 'text-muted hover:text-primary'}"
+      >
+        Root Finding
+      </button>
+      <button
+        onclick={() => activeCategory = 'integration'}
+        class="px-4 py-2 font-medium transition-colors {activeCategory === 'integration' ? 'border-b-2 border-accent text-accent' : 'text-muted hover:text-primary'}"
+      >
+        Integration
+      </button>
+      <button
+        onclick={() => activeCategory = 'odes'}
+        class="px-4 py-2 font-medium transition-colors {activeCategory === 'odes' ? 'border-b-2 border-accent text-accent' : 'text-muted hover:text-primary'}"
+      >
+        ODEs
+      </button>
+    </div>
   </div>
 
   <!-- Component Views -->

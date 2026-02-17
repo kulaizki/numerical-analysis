@@ -115,7 +115,7 @@
     <h3 class="text-lg font-semibold text-primary mb-4">Configuration</h3>
 
     <div class="mb-4">
-      <label class="block text-sm text-muted mb-2">Function</label>
+      <span class="block text-sm text-muted mb-2">Function</span>
       <select
         bind:value={integFuncIndex}
         class="w-full bg-bg-3 text-primary border border-border px-3 py-2 text-sm focus:outline-none focus:border-accent"

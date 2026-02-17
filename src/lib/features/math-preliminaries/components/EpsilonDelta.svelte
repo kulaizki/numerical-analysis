@@ -313,9 +313,9 @@
         <h3 class="text-sm font-semibold text-primary mb-3">Controls</h3>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label class="block text-xs text-[#10b981] mb-1">
+            <span class="block text-xs text-[#10b981] mb-1">
               ε (epsilon) = {epsilon.toFixed(3)}
-            </label>
+            </span>
             <input
               type="range"
               min="0.01"
@@ -327,9 +327,9 @@
             <p class="text-xs text-muted mt-1">Output tolerance: |f(x) − L| &lt; ε</p>
           </div>
           <div>
-            <label class="block text-xs text-[#818cf8] mb-1">
+            <span class="block text-xs text-[#818cf8] mb-1">
               δ (delta) = {delta.toFixed(3)}
-            </label>
+            </span>
             <input
               type="range"
               min="0.01"

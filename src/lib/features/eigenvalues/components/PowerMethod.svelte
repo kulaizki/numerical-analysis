@@ -31,7 +31,7 @@
   });
 
   // === CANVAS ===
-  let powerCanvas: HTMLCanvasElement;
+  let powerCanvas: HTMLCanvasElement | undefined = $state();
 
   // === LOGIC ===
   function runPowerMethod() {

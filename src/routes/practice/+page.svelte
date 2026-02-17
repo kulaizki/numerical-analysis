@@ -20,7 +20,7 @@
 
   // Load progress from localStorage
   onMount(() => {
-    const stored = localStorage.getItem('numerilab-progress');
+    const stored = localStorage.getItem('numerical-analysis-progress');
     if (stored) {
       progress = JSON.parse(stored);
     }
@@ -28,7 +28,7 @@
 
   // Save progress
   function saveProgress() {
-    localStorage.setItem('numerilab-progress', JSON.stringify(progress));
+    localStorage.setItem('numerical-analysis-progress', JSON.stringify(progress));
   }
 
   // Start quick quiz
@@ -100,10 +100,10 @@
 </script>
 
 <svelte:head>
-  <title>Practice | numerilab</title>
+  <title>Practice | Numerical Analysis</title>
 </svelte:head>
 
-<div class="container mx-auto px-4 py-8 max-w-6xl">
+<div class="space-y-6">
   {#if mode === 'hub'}
     <PracticeHub
       bind:selectedDifficulty

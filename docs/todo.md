@@ -1,4 +1,4 @@
-# numerilab — Implementation Checklist
+# Interactive Numerical Analysis — Implementation Checklist
 
 ## Architecture
 

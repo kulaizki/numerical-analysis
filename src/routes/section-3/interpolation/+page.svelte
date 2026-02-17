@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-  <title>Interpolation | numerilab</title>
+  <title>Interpolation | Numerical Analysis</title>
 </svelte:head>
 
 <div class="space-y-6">

@@ -160,7 +160,7 @@
         <h3 class="text-lg font-medium text-primary mb-3">Cobweb Diagram</h3>
 
         <div class="mb-4">
-          <label class="text-sm text-muted mb-1 block">Starting point x&#8320;</label>
+          <span class="text-sm text-muted mb-1 block">Starting point x&#8320;</span>
           <Input
             type="number"
             bind:value={x0}

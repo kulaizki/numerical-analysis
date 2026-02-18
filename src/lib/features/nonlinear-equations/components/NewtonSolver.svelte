@@ -63,29 +63,74 @@
   let iterations = $state<Array<{n: number, x: number, fx: number, fpx: number, error: number}>>([]);
   let currentStep = $state(0);
   let running = $state(false);
+  let diverged = $state(false);
+  let divergeReason = $state('');
+  let jumpDetected = $state(false);
+
+  const DERIV_TOL = 1e-12;
+  const JUMP_FACTOR = 1e6;
 
   function reset() {
     iterations = [];
     currentStep = 0;
     running = false;
+    diverged = false;
+    divergeReason = '';
+    jumpDetected = false;
   }
 
-  function step() {
+  /** Returns true if the step was valid, false if divergence was detected. */
+  function step(): boolean {
     const n = iterations.length;
-    const x = n === 0 ? x0 : iterations[n - 1].x - iterations[n - 1].fx / iterations[n - 1].fpx;
-    const fx = f(x);
-    const fpx = fPrime(x);
-    const error = n === 0 ? 0 : Math.abs(x - iterations[n - 1].x);
+    const prev = n > 0 ? iterations[n - 1] : null;
 
-    iterations = [...iterations, { n: n + 1, x, fx, fpx, error }];
+    const xCurr = prev ? prev.x - prev.fx / prev.fpx : x0;
+
+    // Check NaN / Infinity
+    if (!isFinite(xCurr)) {
+      diverged = true;
+      divergeReason = `x became ${isNaN(xCurr) ? 'NaN' : 'infinite'} at iteration ${n + 1}. The method diverged.`;
+      return false;
+    }
+
+    const fx = f(xCurr);
+    const fpx = fPrime(xCurr);
+    const error = prev ? Math.abs(xCurr - prev.x) : 0;
+
+    // Check near-zero derivative (next step would blow up)
+    if (Math.abs(fpx) < DERIV_TOL) {
+      // Still record this iteration so the user can see it
+      iterations = [...iterations, { n: n + 1, x: xCurr, fx, fpx, error }];
+      currentStep = iterations.length;
+      diverged = true;
+      divergeReason = `f'(x) ≈ 0 at x = ${xCurr.toFixed(6)} (iteration ${n + 1}). The next step would divide by near-zero.`;
+      return false;
+    }
+
+    // Check for large jump (error increased dramatically)
+    if (prev && prev.error > 0 && error > prev.error * JUMP_FACTOR) {
+      iterations = [...iterations, { n: n + 1, x: xCurr, fx, fpx, error }];
+      currentStep = iterations.length;
+      diverged = true;
+      divergeReason = `Step size jumped from ${prev.error.toExponential(2)} to ${error.toExponential(2)} at iteration ${n + 1}. The method is diverging.`;
+      return false;
+    }
+
+    // Track if any single step was much larger than the previous (mild jump)
+    if (prev && prev.error > 0 && error > prev.error * 100) {
+      jumpDetected = true;
+    }
+
+    iterations = [...iterations, { n: n + 1, x: xCurr, fx, fpx, error }];
     currentStep = iterations.length;
+    return true;
   }
 
   async function runAll() {
     reset();
     running = true;
     for (let i = 0; i < 20; i++) {
-      step();
+      if (!step()) break; // stop on divergence
       await new Promise(resolve => setTimeout(resolve, 300));
       const last = iterations[iterations.length - 1];
       if (iterations.length > 1 && last.error < toleranceInput && Math.abs(last.fx) < toleranceInput) break;
@@ -300,7 +345,7 @@
         </div>
 
         <div class="flex gap-2 mb-4">
-          <Button onclick={step} disabled={running || (iterations.length > 1 && iterations[iterations.length - 1].error < toleranceInput && Math.abs(iterations[iterations.length - 1].fx) < toleranceInput)}>
+          <Button onclick={step} disabled={running || diverged || (iterations.length > 1 && iterations[iterations.length - 1].error < toleranceInput && Math.abs(iterations[iterations.length - 1].fx) < toleranceInput)}>
             Step
           </Button>
           <Button onclick={runAll} disabled={running}>
@@ -365,13 +410,20 @@
             />
           </div>
 
-          {#if iterations.length >= 20 || (iterations.length > 1 && iterations[iterations.length - 1].error < toleranceInput && Math.abs(iterations[iterations.length - 1].fx) >= toleranceInput)}
+          {#if diverged}
+            <div class="mt-3 p-3 bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+              <strong>Diverged:</strong> {divergeReason} Try a different starting point.
+            </div>
+          {:else if iterations.length >= 20 || (iterations.length > 1 && iterations[iterations.length - 1].error < toleranceInput && Math.abs(iterations[iterations.length - 1].fx) >= toleranceInput)}
             <div class="mt-3 p-3 bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm">
               <strong>Warning:</strong> Step size converged but |f(x)| = {Math.abs(iterations[iterations.length - 1].fx).toFixed(6)} is not near zero. The method may have stagnated at a non-root. Try different starting points.
             </div>
-          {/if}
-
-          {#if iterations.length > 1 && iterations[iterations.length - 1].error < toleranceInput && Math.abs(iterations[iterations.length - 1].fx) < toleranceInput}
+          {:else if iterations.length > 1 && iterations[iterations.length - 1].error < toleranceInput && Math.abs(iterations[iterations.length - 1].fx) < toleranceInput}
+            {#if jumpDetected}
+              <div class="mt-3 p-3 bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm">
+                <strong>Warning:</strong> The method experienced a large jump between iterations before eventually converging. The result may be unreliable — verify with a different starting point.
+              </div>
+            {/if}
             <div class="mt-3 p-3 bg-green-500/10 border border-green-500/30 text-green-400 text-sm">
               Converged to root x ≈ {iterations[iterations.length - 1].x.toFixed(6)} in {iterations.length} iterations.
             </div>

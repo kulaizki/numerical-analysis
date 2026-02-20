@@ -341,7 +341,7 @@
                     <td class="p-2 text-right text-muted font-mono">{iter.x0.toFixed(6)}</td>
                     <td class="p-2 text-right text-primary font-mono">{iter.x1.toFixed(6)}</td>
                     <td class="p-2 text-right text-muted font-mono">{iter.fx1.toFixed(6)}</td>
-                    <td class="p-2 text-right text-accent font-mono">{iter.error.toExponential(2)}</td>
+                    <td class="p-2 text-right text-accent font-mono">{iter.error.toFixed(8)}</td>
                   </tr>
                 {/each}
               </tbody>

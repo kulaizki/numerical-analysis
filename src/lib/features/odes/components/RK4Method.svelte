@@ -325,7 +325,7 @@
 							<td class="p-2 text-primary font-mono">{s.t.toFixed(3)}</td>
 							<td class="p-2 text-primary font-mono">{s.y.toFixed(6)}</td>
 							<td class="p-2 text-primary font-mono">{s.exact.toFixed(6)}</td>
-							<td class="p-2 text-accent font-mono">{s.error.toExponential(3)}</td>
+							<td class="p-2 text-accent font-mono">{s.error.toFixed(8)}</td>
 						</tr>
 					{/each}
 				</tbody>

@@ -445,12 +445,12 @@
               </div>
               <div>
                 <p class="text-xs text-muted mb-0.5">Actual error |f(x) - P<sub>{taylorDegree}</sub>(x)|</p>
-                <p class="text-accent">{r.actualError.toExponential(4)}</p>
+                <p class="text-accent">{r.actualError.toFixed(8)}</p>
               </div>
               <div>
                 <p class="text-xs text-muted mb-0.5">Error bound M/(n+1)! · |x-a|^(n+1)</p>
                 <p class="{isFinite(r.bound) ? 'text-accent' : 'text-red-400'}">
-                  {isFinite(r.bound) ? r.bound.toExponential(4) : 'Infinity (outside radius)'}
+                  {isFinite(r.bound) ? r.bound.toFixed(8) : 'Infinity (outside radius)'}
                 </p>
               </div>
             </div>

@@ -118,10 +118,10 @@
           {#each section.topics as topic}
             <a
               href={topic.path}
-              class="block hover:text-accent transition-colors duration-150"
+              class="block p-2.5 -mx-2.5 rounded-md hover:bg-accent/10 hover:text-accent transition-colors duration-150"
             >
               <div class="text-sm font-medium text-primary">{topic.title}</div>
-              <div class="text-xs text-muted">{topic.description}</div>
+              <div class="text-xs text-muted mt-0.5">{topic.description}</div>
             </a>
           {/each}
         </div>

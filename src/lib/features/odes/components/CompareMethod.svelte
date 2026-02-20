@@ -217,7 +217,7 @@
 						{eulerSteps[eulerSteps.length - 1].y.toFixed(6)}
 					</td>
 					<td class="p-2 text-accent font-mono">
-						{eulerSteps[eulerSteps.length - 1].error.toExponential(3)}
+						{eulerSteps[eulerSteps.length - 1].error.toFixed(8)}
 					</td>
 					<td class="p-2 text-muted">{eulerSteps.length - 1}</td>
 					<td class="p-2 text-muted">{eulerSteps.length - 1}</td>
@@ -228,7 +228,7 @@
 						{heunSteps[heunSteps.length - 1].y.toFixed(6)}
 					</td>
 					<td class="p-2 text-accent font-mono">
-						{heunSteps[heunSteps.length - 1].error.toExponential(3)}
+						{heunSteps[heunSteps.length - 1].error.toFixed(8)}
 					</td>
 					<td class="p-2 text-muted">{heunSteps.length - 1}</td>
 					<td class="p-2 text-muted">{2 * (heunSteps.length - 1)}</td>
@@ -239,7 +239,7 @@
 						{rk4Steps[rk4Steps.length - 1].y.toFixed(6)}
 					</td>
 					<td class="p-2 text-accent font-mono">
-						{rk4Steps[rk4Steps.length - 1].error.toExponential(3)}
+						{rk4Steps[rk4Steps.length - 1].error.toFixed(8)}
 					</td>
 					<td class="p-2 text-muted">{rk4Steps.length - 1}</td>
 					<td class="p-2 text-muted">{4 * (rk4Steps.length - 1)}</td>
@@ -249,7 +249,7 @@
 					<td class="p-2 text-primary font-mono">
 						{exactSolution(tf).toFixed(6)}
 					</td>
-					<td class="p-2 text-accent font-mono">0.000e+00</td>
+					<td class="p-2 text-accent font-mono">0.00000000</td>
 					<td class="p-2 text-muted">---</td>
 					<td class="p-2 text-muted">---</td>
 				</tr>

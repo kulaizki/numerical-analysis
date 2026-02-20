@@ -215,7 +215,7 @@
           </div>
           <div class="flex justify-between items-center">
             <span class="text-sm text-accent">Error:</span>
-            <Badge class="font-mono">{trapError.toExponential(4)}</Badge>
+            <Badge class="font-mono">{trapError.toFixed(8)}</Badge>
           </div>
         </div>
       </div>

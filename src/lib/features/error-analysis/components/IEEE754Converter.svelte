@@ -75,7 +75,7 @@
     if (abs > Number.MAX_VALUE) {
       return { label: 'Overflow', color: '#ef4444', detail: 'Exceeds MAX_VALUE. Result: Infinity.' };
     }
-    return { label: 'Normal', color: '#34d399', detail: `Representable as a normal IEEE 754 double. |x| ≈ ${abs.toExponential(4)}` };
+    return { label: 'Normal', color: '#34d399', detail: `Representable as a normal IEEE 754 double. |x| ≈ ${abs.toFixed(8)}` };
   });
 </script>
 

@@ -103,7 +103,7 @@
     text += `Interval: [${integA}, ${integB}], Panels: ${integN}\n\n`;
     text += 'Method\t\tValue\t\tError\n';
     integResults.forEach(r => {
-      text += `${r.method}\t\t${r.value.toFixed(8)}\t${r.error.toExponential(2)}\n`;
+      text += `${r.method}\t\t${r.value.toFixed(8)}\t${r.error.toFixed(8)}\n`;
     });
     return text;
   }
@@ -185,7 +185,7 @@
                 <tr class="border-b border-border hover:bg-bg-3 transition-colors">
                   <td class="py-2 px-3 text-primary font-medium">{result.method}</td>
                   <td class="py-2 px-3 text-right font-mono text-primary">{result.value.toFixed(8)}</td>
-                  <td class="py-2 px-3 text-right font-mono text-primary">{result.error.toExponential(2)}</td>
+                  <td class="py-2 px-3 text-right font-mono text-primary">{result.error.toFixed(8)}</td>
                 </tr>
               {/each}
             </tbody>

@@ -112,7 +112,7 @@
       iterations = [...iterations, { n: n + 1, x: xCurr, fx, fpx, error }];
       currentStep = iterations.length;
       diverged = true;
-      divergeReason = `Step size jumped from ${prev.error.toExponential(2)} to ${error.toExponential(2)} at iteration ${n + 1}. The method is diverging.`;
+      divergeReason = `Step size jumped from ${prev.error.toFixed(8)} to ${error.toFixed(8)} at iteration ${n + 1}. The method is diverging.`;
       return false;
     }
 
@@ -376,7 +376,7 @@
                     <td class="p-2 text-right text-muted font-mono">{iter.fx.toFixed(6)}</td>
                     <td class="p-2 text-right text-muted font-mono">{iter.fpx.toFixed(6)}</td>
                     <td class="p-2 text-right text-accent font-mono">
-                      {iter.n > 1 ? iter.error.toExponential(2) : '-'}
+                      {iter.n > 1 ? iter.error.toFixed(8) : '-'}
                     </td>
                   </tr>
                 {/each}

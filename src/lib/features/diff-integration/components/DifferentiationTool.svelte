@@ -235,21 +235,21 @@
             <span class="text-sm" style="color: #ef4444;">Forward:</span>
             <div class="flex gap-2">
               <Badge class="font-mono">{forwardDiff.toFixed(6)}</Badge>
-              <Badge class="font-mono text-xs">ε = {forwardError.toExponential(2)}</Badge>
+              <Badge class="font-mono text-xs">ε = {forwardError.toFixed(8)}</Badge>
             </div>
           </div>
           <div class="flex justify-between items-center">
             <span class="text-sm" style="color: #8b5cf6;">Backward:</span>
             <div class="flex gap-2">
               <Badge class="font-mono">{backwardDiff.toFixed(6)}</Badge>
-              <Badge class="font-mono text-xs">ε = {backwardError.toExponential(2)}</Badge>
+              <Badge class="font-mono text-xs">ε = {backwardError.toFixed(8)}</Badge>
             </div>
           </div>
           <div class="flex justify-between items-center">
             <span class="text-sm" style="color: #f59e0b;">Central:</span>
             <div class="flex gap-2">
               <Badge class="font-mono">{centralDiff.toFixed(6)}</Badge>
-              <Badge class="font-mono text-xs">ε = {centralError.toExponential(2)}</Badge>
+              <Badge class="font-mono text-xs">ε = {centralError.toFixed(8)}</Badge>
             </div>
           </div>
         </div>

@@ -87,11 +87,11 @@
   <div class="grid grid-cols-3 gap-4 text-sm">
     <div>
       <p class="text-muted mb-1">Absolute Error</p>
-      <p class="font-mono text-primary">{absError.toExponential(6)}</p>
+      <p class="font-mono text-primary">{absError.toFixed(8)}</p>
     </div>
     <div>
       <p class="text-muted mb-1">Relative Error</p>
-      <p class="font-mono text-primary">{relError.toExponential(6)}</p>
+      <p class="font-mono text-primary">{relError.toFixed(8)}</p>
     </div>
     <div>
       <p class="text-muted mb-1">Significant Digits</p>

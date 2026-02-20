@@ -277,7 +277,7 @@
                     <td class="py-2 px-4 text-right text-tertiary">{b[i].toFixed(6)}</td>
                     <td class="py-2 px-4 text-right text-tertiary">{axRow.toFixed(6)}</td>
                     <td class="py-2 px-4 text-right {Math.abs(ri) < 1e-6 ? 'text-green-400' : Math.abs(ri) < 1e-3 ? 'text-yellow-400' : 'text-red-400'}">
-                      {ri.toExponential(4)}
+                      {ri.toFixed(8)}
                     </td>
                   </tr>
                 {/each}
@@ -289,13 +289,13 @@
             <div class="flex items-center justify-between">
               <span class="text-tertiary">Residual vector <KaTeX math={"\\mathbf{r}"} /></span>
               <span class="font-mono text-primary">
-                ({residual.map(v => v.toExponential(4)).join(', ')})
+                ({residual.map(v => v.toFixed(8)).join(', ')})
               </span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-tertiary">Infinity norm <KaTeX math={"\\|\\mathbf{r}\\|_\\infty"} /></span>
               <span class="font-mono {rInfNorm < 1e-6 ? 'text-green-400' : rInfNorm < 1e-3 ? 'text-yellow-400' : 'text-red-400'}">
-                {rInfNorm.toExponential(4)}
+                {rInfNorm.toFixed(8)}
               </span>
             </div>
           </div>

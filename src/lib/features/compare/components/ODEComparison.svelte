@@ -147,7 +147,7 @@
     text += 'Method\t\tFinal Value\tFinal Error\n';
     odeResults.filter(r => r.method !== 'Exact').forEach(r => {
       const finalY = r.points[r.points.length - 1].y;
-      text += `${r.method}\t\t${finalY.toFixed(8)}\t${r.finalError.toExponential(2)}\n`;
+      text += `${r.method}\t\t${finalY.toFixed(8)}\t${r.finalError.toFixed(8)}\n`;
     });
     return text;
   }
@@ -248,7 +248,7 @@
                 <tr class="border-b border-border hover:bg-bg-3 transition-colors">
                   <td class="py-2 px-3 text-primary font-medium">{result.method}</td>
                   <td class="py-2 px-3 text-right font-mono text-primary">{result.points[result.points.length - 1].y.toFixed(8)}</td>
-                  <td class="py-2 px-3 text-right font-mono text-primary">{result.finalError.toExponential(2)}</td>
+                  <td class="py-2 px-3 text-right font-mono text-primary">{result.finalError.toFixed(8)}</td>
                 </tr>
               {/each}
             </tbody>

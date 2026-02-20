@@ -199,7 +199,7 @@
                     <td class="text-right py-2 px-4 text-tertiary">{iter.x[1].toFixed(6)}</td>
                     <td class="text-right py-2 px-4 text-tertiary">{iter.x[2].toFixed(6)}</td>
                     <td class="text-right py-2 px-4 {iter.residual < 1e-6 ? 'text-green-400' : 'text-yellow-400'}">
-                      {iter.residual.toExponential(3)}
+                      {iter.residual.toFixed(8)}
                     </td>
                   </tr>
                 {/each}

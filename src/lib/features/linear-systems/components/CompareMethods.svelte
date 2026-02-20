@@ -103,7 +103,7 @@
               <h4 class="text-blue-400 font-semibold mb-2">Gauss-Jacobi</h4>
               <div class="space-y-1 text-sm">
                 <p class="text-tertiary">Iterations to converge: <span class="font-mono text-primary">{compareJacobiIters.length - 1}</span></p>
-                <p class="text-tertiary">Final residual: <span class="font-mono text-primary">{compareJacobiIters[compareJacobiIters.length - 1].residual.toExponential(3)}</span></p>
+                <p class="text-tertiary">Final residual: <span class="font-mono text-primary">{compareJacobiIters[compareJacobiIters.length - 1].residual.toFixed(8)}</span></p>
                 <p class="text-tertiary">Final solution:</p>
                 <p class="font-mono text-xs text-primary">
                   [{compareJacobiIters[compareJacobiIters.length - 1].x.map(v => v.toFixed(4)).join(', ')}]
@@ -115,7 +115,7 @@
               <h4 class="text-pink-400 font-semibold mb-2">Gauss-Seidel</h4>
               <div class="space-y-1 text-sm">
                 <p class="text-tertiary">Iterations to converge: <span class="font-mono text-primary">{compareSeidelIters.length - 1}</span></p>
-                <p class="text-tertiary">Final residual: <span class="font-mono text-primary">{compareSeidelIters[compareSeidelIters.length - 1].residual.toExponential(3)}</span></p>
+                <p class="text-tertiary">Final residual: <span class="font-mono text-primary">{compareSeidelIters[compareSeidelIters.length - 1].residual.toFixed(8)}</span></p>
                 <p class="text-tertiary">Final solution:</p>
                 <p class="font-mono text-xs text-primary">
                   [{compareSeidelIters[compareSeidelIters.length - 1].x.map(v => v.toFixed(4)).join(', ')}]

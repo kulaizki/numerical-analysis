@@ -226,7 +226,7 @@
     text += `Interval: [${rootA}, ${rootB}], Tolerance: ${rootTol}\n\n`;
     text += 'Method\t\tRoot\t\tIterations\tFinal Error\n';
     rootResults.forEach(r => {
-      text += `${r.method}\t\t${r.root.toFixed(8)}\t${r.iterations}\t\t${r.finalError.toExponential(2)}\n`;
+      text += `${r.method}\t\t${r.root.toFixed(8)}\t${r.iterations}\t\t${r.finalError.toFixed(8)}\n`;
     });
     if (rootWinner) {
       text += `\nWinner: ${rootWinner.method} (${rootWinner.iterations} iterations)\n`;
@@ -346,7 +346,7 @@
                   </td>
                   <td class="py-2 px-3 text-right font-mono text-primary">{result.root.toFixed(8)}</td>
                   <td class="py-2 px-3 text-right text-primary">{result.iterations}</td>
-                  <td class="py-2 px-3 text-right font-mono text-primary">{result.finalError.toExponential(2)}</td>
+                  <td class="py-2 px-3 text-right font-mono text-primary">{result.finalError.toFixed(8)}</td>
                 </tr>
               {/each}
             </tbody>

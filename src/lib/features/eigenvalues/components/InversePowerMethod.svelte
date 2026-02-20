@@ -270,7 +270,7 @@
                 <td class="p-2 text-primary">{it.step}</td>
                 <td class="p-2 text-accent">[{it.vector.map(v => v.toFixed(4)).join(', ')}]</td>
                 <td class="p-2 text-tertiary">{it.eigenvalue.toFixed(6)}</td>
-                <td class="p-2 text-muted">{it.error.toExponential(2)}</td>
+                <td class="p-2 text-muted">{it.error.toFixed(8)}</td>
               </tr>
             {/each}
           </tbody>

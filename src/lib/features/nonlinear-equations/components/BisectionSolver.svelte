@@ -54,9 +54,11 @@
 
   let bisectA = $state(-2);
   let bisectB = $state(3);
-  let iterations = $state<Array<{n: number, a: number, b: number, c: number, fc: number, error: number}>>([]);
+  let iterations = $state<Array<{n: number, a: number, b: number, c: number, fb: number, fc: number, fbfc: number}>>([]);
   let currentStep = $state(0);
   let running = $state(false);
+  let nextA = $state(0);
+  let nextB = $state(0);
 
   function reset() {
     iterations = [];
@@ -66,42 +68,41 @@
 
   function step() {
     const n = iterations.length;
-    const a = n === 0 ? bisectA : iterations[n - 1].b < iterations[n - 1].a ? iterations[n - 1].b : iterations[n - 1].a;
-    const b = n === 0 ? bisectB : iterations[n - 1].b > iterations[n - 1].a ? iterations[n - 1].b : iterations[n - 1].a;
+    const a = n === 0 ? bisectA : nextA;
+    const b = n === 0 ? bisectB : nextB;
 
     if (n === 0) {
-      const fa = f(bisectA);
-      const fb = f(bisectB);
-      if (fa * fb > 0) {
+      if (f(a) * f(b) > 0) {
         alert("f(a) and f(b) must have opposite signs!");
         return;
       }
     }
 
     const c = (a + b) / 2;
+    const fb = f(b);
     const fc = f(c);
-    const fa = f(a);
-    const error = Math.abs(b - a);
+    const fbfc = fb * fc;
 
-    let newA = a, newB = b;
-    if (fa * fc < 0) {
-      newB = c;
+    iterations = [...iterations, { n: n + 1, a, b, c, fb, fc, fbfc }];
+
+    if (fbfc > 0) {
+      nextA = a;
+      nextB = c;
     } else {
-      newA = c;
+      nextA = c;
+      nextB = b;
     }
 
-    iterations = [...iterations, { n: n + 1, a: newA, b: newB, c, fc, error }];
     currentStep = iterations.length;
   }
 
   async function runAll() {
     reset();
     running = true;
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 50; i++) {
       step();
       await new Promise(resolve => setTimeout(resolve, 300));
-      const last = iterations[iterations.length - 1];
-      if (last.error < toleranceInput && Math.abs(last.fc) < toleranceInput) break;
+      if (Math.abs(nextB - nextA) < toleranceInput) break;
     }
     running = false;
   }
@@ -168,8 +169,10 @@
 
     if (currentStep > 0 && iterations.length > 0) {
       const iter = iterations[currentStep - 1];
+      const lo = Math.min(nextA, nextB);
+      const hi = Math.max(nextA, nextB);
       ctx.fillStyle = 'rgba(245, 158, 11, 0.2)';
-      ctx.fillRect(mapX(iter.a), padding, mapX(iter.b) - mapX(iter.a), height - 2 * padding);
+      ctx.fillRect(mapX(lo), padding, mapX(hi) - mapX(lo), height - 2 * padding);
 
       ctx.fillStyle = '#a5b4fc';
       ctx.beginPath();
@@ -178,10 +181,10 @@
 
       ctx.fillStyle = '#f59e0b';
       ctx.beginPath();
-      ctx.arc(mapX(iter.a), mapY(f(iter.a)), 4, 0, 2 * Math.PI);
+      ctx.arc(mapX(nextA), mapY(f(nextA)), 4, 0, 2 * Math.PI);
       ctx.fill();
       ctx.beginPath();
-      ctx.arc(mapX(iter.b), mapY(f(iter.b)), 4, 0, 2 * Math.PI);
+      ctx.arc(mapX(nextB), mapY(f(nextB)), 4, 0, 2 * Math.PI);
       ctx.fill();
     } else {
       ctx.fillStyle = 'rgba(245, 158, 11, 0.2)';
@@ -209,6 +212,8 @@
     if (canvas) {
       iterations;
       currentStep;
+      nextA;
+      nextB;
       f;
       drawCanvas(canvas);
     }
@@ -314,7 +319,7 @@
         </div>
 
         <div class="flex gap-2 mb-4">
-          <Button onclick={step} disabled={running || (iterations.length > 0 && iterations[iterations.length - 1].error < toleranceInput && Math.abs(iterations[iterations.length - 1].fc) < toleranceInput)}>
+          <Button onclick={step} disabled={running || (iterations.length > 0 && Math.abs(nextB - nextA) < toleranceInput)}>
             Step
           </Button>
           <Button onclick={runAll} disabled={running}>
@@ -334,34 +339,36 @@
                   <th class="text-right p-2">a</th>
                   <th class="text-right p-2">b</th>
                   <th class="text-right p-2">c</th>
+                  <th class="text-right p-2"><KaTeX math="f(b)" /></th>
                   <th class="text-right p-2"><KaTeX math="f(c)" /></th>
-                  <th class="text-right p-2">|b-a|</th>
+                  <th class="text-right p-2"><KaTeX math="f(b)f(c)" /></th>
                 </tr>
               </thead>
               <tbody>
                 {#each iterations as iter}
                   <tr class="border-b border-border/50">
                     <td class="p-2 text-primary">{iter.n}</td>
-                    <td class="p-2 text-right text-muted font-mono">{iter.a.toFixed(6)}</td>
-                    <td class="p-2 text-right text-muted font-mono">{iter.b.toFixed(6)}</td>
-                    <td class="p-2 text-right text-primary font-mono">{iter.c.toFixed(6)}</td>
-                    <td class="p-2 text-right text-muted font-mono">{iter.fc.toFixed(6)}</td>
-                    <td class="p-2 text-right text-accent font-mono">{iter.error.toExponential(2)}</td>
+                    <td class="p-2 text-right text-muted font-mono">{iter.a.toFixed(5)}</td>
+                    <td class="p-2 text-right text-muted font-mono">{iter.b.toFixed(5)}</td>
+                    <td class="p-2 text-right text-primary font-mono">{iter.c.toFixed(5)}</td>
+                    <td class="p-2 text-right text-muted font-mono">{iter.fb.toFixed(5)}</td>
+                    <td class="p-2 text-right text-muted font-mono">{iter.fc.toFixed(5)}</td>
+                    <td class="p-2 text-right text-accent font-mono">{iter.fbfc.toFixed(8)}</td>
                   </tr>
                 {/each}
               </tbody>
             </table>
           </div>
 
-          {#if iterations.length >= 20 || (iterations[iterations.length - 1].error < toleranceInput && Math.abs(iterations[iterations.length - 1].fc) >= toleranceInput)}
+          {#if iterations.length >= 50 && Math.abs(nextB - nextA) >= toleranceInput}
             <div class="mt-3 p-3 bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm">
-              <strong>Warning:</strong> Step size converged but |f(x)| = {Math.abs(iterations[iterations.length - 1].fc).toFixed(6)} is not near zero. The method may have stagnated at a non-root. Try different starting points.
+              <strong>Warning:</strong> Maximum iterations reached. Current interval width = {Math.abs(nextB - nextA).toFixed(8)}. Try a smaller interval or larger tolerance.
             </div>
           {/if}
 
-          {#if iterations[iterations.length - 1].error < toleranceInput && Math.abs(iterations[iterations.length - 1].fc) < toleranceInput}
+          {#if Math.abs(nextB - nextA) < toleranceInput}
             <div class="mt-3 p-3 bg-green-500/10 border border-green-500/30 text-green-400 text-sm">
-              Converged to root x ≈ {iterations[iterations.length - 1].c.toFixed(6)} in {iterations.length} iterations.
+              Converged to root x ≈ {iterations[iterations.length - 1].c.toFixed(8)} in {iterations.length} iterations.
             </div>
           {/if}
 
@@ -371,8 +378,8 @@
               data={{
                 labels: iterations.map(i => i.n),
                 datasets: [{
-                  label: 'Error |b-a|',
-                  data: iterations.map(i => i.error),
+                  label: 'Interval width |b-a|',
+                  data: iterations.map(i => i.b - i.a),
                   borderColor: '#818cf8',
                   backgroundColor: '#818cf8'
                 }]
@@ -431,7 +438,9 @@
                   <th class="text-right p-2 border-r border-border">a</th>
                   <th class="text-right p-2 border-r border-border">b</th>
                   <th class="text-right p-2 border-r border-border">c</th>
-                  <th class="text-right p-2">f(c)</th>
+                  <th class="text-right p-2 border-r border-border">f(b)</th>
+                  <th class="text-right p-2 border-r border-border">f(c)</th>
+                  <th class="text-right p-2">f(b)f(c)</th>
                 </tr>
               </thead>
               <tbody>
@@ -440,59 +449,32 @@
                   <td class="p-2 text-right text-muted border-r border-border">1.00000</td>
                   <td class="p-2 text-right text-muted border-r border-border">1.50000</td>
                   <td class="p-2 text-right text-primary border-r border-border">1.25000</td>
-                  <td class="p-2 text-right text-muted">1.56470</td>
+                  <td class="p-2 text-right text-muted border-r border-border">8.89063</td>
+                  <td class="p-2 text-right text-muted border-r border-border">1.56470</td>
+                  <td class="p-2 text-right text-accent">13.91113663</td>
                 </tr>
                 <tr class="border-b border-border/60">
                   <td class="p-2 text-primary border-r border-border">2</td>
                   <td class="p-2 text-right text-muted border-r border-border">1.00000</td>
                   <td class="p-2 text-right text-muted border-r border-border">1.25000</td>
                   <td class="p-2 text-right text-primary border-r border-border">1.12500</td>
-                  <td class="p-2 text-right text-muted">−0.09771</td>
+                  <td class="p-2 text-right text-muted border-r border-border">1.56470</td>
+                  <td class="p-2 text-right text-muted border-r border-border">−0.09771</td>
+                  <td class="p-2 text-right text-accent">−0.15289200</td>
                 </tr>
                 <tr class="border-b border-border/60">
                   <td class="p-2 text-primary border-r border-border">3</td>
                   <td class="p-2 text-right text-muted border-r border-border">1.12500</td>
                   <td class="p-2 text-right text-muted border-r border-border">1.25000</td>
                   <td class="p-2 text-right text-primary border-r border-border">1.18750</td>
-                  <td class="p-2 text-right text-muted">0.61665</td>
+                  <td class="p-2 text-right text-muted border-r border-border">1.56470</td>
+                  <td class="p-2 text-right text-muted border-r border-border">0.61665</td>
+                  <td class="p-2 text-right text-accent">0.96487530</td>
                 </tr>
                 <tr class="border-b border-border/60">
-                  <td class="p-2 text-primary border-r border-border">4</td>
-                  <td class="p-2 text-right text-muted border-r border-border">1.12500</td>
-                  <td class="p-2 text-right text-muted border-r border-border">1.18750</td>
-                  <td class="p-2 text-right text-primary border-r border-border">1.15625</td>
-                  <td class="p-2 text-right text-muted">0.23327</td>
-                </tr>
-                <tr class="border-b border-border/60">
-                  <td class="p-2 text-primary border-r border-border">5</td>
-                  <td class="p-2 text-right text-muted border-r border-border">1.12500</td>
-                  <td class="p-2 text-right text-muted border-r border-border">1.15625</td>
-                  <td class="p-2 text-right text-primary border-r border-border">1.14063</td>
-                  <td class="p-2 text-right text-muted">0.06158</td>
-                </tr>
-                <tr class="border-b border-border/60">
-                  <td class="p-2 text-primary border-r border-border">6</td>
-                  <td class="p-2 text-right text-muted border-r border-border">1.12500</td>
-                  <td class="p-2 text-right text-muted border-r border-border">1.14063</td>
-                  <td class="p-2 text-right text-primary border-r border-border">1.13281</td>
-                  <td class="p-2 text-right text-muted">−0.01958</td>
-                </tr>
-                <tr class="border-b border-border/60">
-                  <td class="p-2 text-primary border-r border-border">7</td>
-                  <td class="p-2 text-right text-muted border-r border-border">1.13281</td>
-                  <td class="p-2 text-right text-muted border-r border-border">1.14063</td>
-                  <td class="p-2 text-right text-primary border-r border-border">1.13672</td>
-                  <td class="p-2 text-right text-muted">0.02062</td>
-                </tr>
-                <tr class="border-b border-border/60">
-                  <td class="p-2 text-primary border-r border-border">8</td>
-                  <td class="p-2 text-right text-muted border-r border-border">1.13281</td>
-                  <td class="p-2 text-right text-muted border-r border-border">1.13672</td>
-                  <td class="p-2 text-right text-primary border-r border-border">1.13477</td>
-                  <td class="p-2 text-right text-muted">0.00043</td>
-                </tr>
-                <tr class="border-b border-border/60">
-                  <td class="p-2 text-muted border-r border-border">...</td>
+                  <td class="p-2 text-primary border-r border-border">...</td>
+                  <td class="p-2 text-right text-muted border-r border-border">...</td>
+                  <td class="p-2 text-right text-muted border-r border-border">...</td>
                   <td class="p-2 text-right text-muted border-r border-border">...</td>
                   <td class="p-2 text-right text-muted border-r border-border">...</td>
                   <td class="p-2 text-right text-muted border-r border-border">...</td>
@@ -503,7 +485,9 @@
                   <td class="p-2 text-right text-muted border-r border-border">1.13470</td>
                   <td class="p-2 text-right text-muted border-r border-border">1.13474</td>
                   <td class="p-2 text-right text-primary border-r border-border">1.13472</td>
-                  <td class="p-2 text-right text-muted">−0.00004</td>
+                  <td class="p-2 text-right text-muted border-r border-border">0.00011</td>
+                  <td class="p-2 text-right text-muted border-r border-border">−0.00004</td>
+                  <td class="p-2 text-right text-accent">0.00000000</td>
                 </tr>
               </tbody>
             </table>

@@ -93,13 +93,13 @@
 
   function formatSci(n: number): string {
     if (n === 0) return '0';
-    return n.toExponential(4);
+    return n.toFixed(8);
   }
 
   function relErrDisplay(row: CancellationRow): string {
     if (row.relError === null) return 'N/A';
     if (row.relError === 0) return '0';
-    return row.relError.toExponential(2);
+    return row.relError.toFixed(8);
   }
 
   function relErrClass(row: CancellationRow): string {
@@ -440,7 +440,7 @@
                       : 'text-green-400'}"
                 >
                   {isFinite(propagationResult.relErrorBound)
-                    ? propagationResult.relErrorBound.toExponential(4)
+                    ? propagationResult.relErrorBound.toFixed(8)
                     : '∞ (division by zero result)'}
                 </p>
               </div>

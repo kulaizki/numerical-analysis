@@ -294,11 +294,10 @@
     useCustom = true;
   }
 
-  function fmt(v: number, digits = 6): string {
+  function fmt(v: number): string {
     if (isNaN(v)) return 'NaN';
     if (!isFinite(v)) return v > 0 ? '+∞' : '−∞';
-    if (Math.abs(v) < 1e-4 && v !== 0) return v.toExponential(3);
-    return v.toFixed(digits);
+    return v.toFixed(8);
   }
 </script>
 

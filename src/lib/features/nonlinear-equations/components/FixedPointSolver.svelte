@@ -207,7 +207,7 @@
                     <td class="p-2 text-right text-muted font-mono">{iter.x.toFixed(6)}</td>
                     <td class="p-2 text-right text-primary font-mono">{iter.gx.toFixed(6)}</td>
                     <td class="p-2 text-right text-accent font-mono">
-                      {idx > 0 ? Math.abs(iter.gx - iterations[idx - 1].gx).toExponential(2) : '-'}
+                      {idx > 0 ? Math.abs(iter.gx - iterations[idx - 1].gx).toFixed(8) : '-'}
                     </td>
                   </tr>
                 {/each}

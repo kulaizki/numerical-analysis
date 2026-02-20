@@ -2,6 +2,7 @@
   import KaTeX from '$lib/components/KaTeX.svelte';
   import Chart from '$lib/components/Chart.svelte';
   import { Card, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
   import {
     type Point,
     defaultPoints,
@@ -194,4 +195,67 @@
       </div>
     </div>
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: points (x0,y0), ..., (xn,yn)
+OUTPUT: spline coefficients a, b, c, d for each interval
+
+h[i] = x[i+1] - x[i]
+
+// Solve tridiagonal system for c[]
+Set up system: h[i-1]*c[i-1] + 2(h[i-1]+h[i])*c[i] + h[i]*c[i+1]
+             = 3*(y[i+1]-y[i])/h[i] - 3*(y[i]-y[i-1])/h[i-1]
+with c[0] = c[n] = 0 (natural spline)
+
+// Compute remaining coefficients
+for i = 0 to n-1:
+    a[i] = y[i]
+    b[i] = (y[i+1]-y[i])/h[i] - h[i]*(2*c[i]+c[i+1])/3
+    d[i] = (c[i+1]-c[i]) / (3*h[i])
+
+RETURN a, b, c, d`,
+    python: `import numpy as np
+
+def cubic_spline(x_pts, y_pts):
+    n = len(x_pts) - 1
+    h = np.diff(x_pts)
+
+    # Tridiagonal system for c
+    A = np.zeros((n + 1, n + 1))
+    rhs = np.zeros(n + 1)
+    A[0, 0] = A[n, n] = 1
+    for i in range(1, n):
+        A[i, i-1] = h[i-1]
+        A[i, i] = 2 * (h[i-1] + h[i])
+        A[i, i+1] = h[i]
+        rhs[i] = 3 * ((y_pts[i+1]-y_pts[i])/h[i]
+                     - (y_pts[i]-y_pts[i-1])/h[i-1])
+    c = np.linalg.solve(A, rhs)
+
+    a = y_pts[:-1]
+    b = np.diff(y_pts)/h - h*(2*c[:-1]+c[1:])/3
+    d = np.diff(c) / (3 * h)
+    return a, b, c[:-1], d`,
+    r: `cubic_spline <- function(x_pts, y_pts) {
+  n <- length(x_pts) - 1
+  h <- diff(x_pts)
+
+  A <- matrix(0, n + 1, n + 1)
+  rhs <- numeric(n + 1)
+  A[1, 1] <- 1; A[n + 1, n + 1] <- 1
+  for (i in 2:n) {
+    A[i, i-1] <- h[i-1]
+    A[i, i] <- 2 * (h[i-1] + h[i])
+    A[i, i+1] <- h[i]
+    rhs[i] <- 3 * ((y_pts[i+1]-y_pts[i])/h[i]
+                  - (y_pts[i]-y_pts[i-1])/h[i-1])
+  }
+  c <- solve(A, rhs)
+
+  a <- y_pts[1:n]
+  b <- diff(y_pts)/h - h*(2*c[1:n]+c[2:(n+1)])/3
+  d <- diff(c) / (3 * h)
+  list(a = a, b = b, c = c[1:n], d = d)
+}`
+  }} />
 </div>

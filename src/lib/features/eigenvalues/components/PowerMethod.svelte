@@ -2,6 +2,7 @@
   import KaTeX from '$lib/components/KaTeX.svelte';
   import Chart from '$lib/components/Chart.svelte';
   import { Card, Badge, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
   import {
     matrixVectorMultiply,
     normalize,
@@ -297,4 +298,50 @@
       </div>
     {/each}
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: A, x0, TOL, max_iter
+OUTPUT: dominant eigenvalue λ, eigenvector x
+
+x = x0 / ||x0||
+for k = 1, 2, ..., max_iter:
+    y = A * x
+    λ = x^T * y
+    x_new = y / ||y||
+    if ||x_new - x|| < TOL:
+        RETURN λ, x_new
+    x = x_new
+
+RETURN "Method failed"`,
+    python: `import numpy as np
+
+def power_method(A, x0=None, tol=1e-6, max_iter=100):
+    n = A.shape[0]
+    x = np.ones(n) if x0 is None else x0.copy()
+    x = x / np.linalg.norm(x)
+
+    for k in range(max_iter):
+        y = A @ x
+        lam = x @ y
+        x_new = y / np.linalg.norm(y)
+        if np.linalg.norm(x_new - x) < tol:
+            return lam, x_new
+        x = x_new
+    raise ValueError("Method failed")`,
+    r: `power_method <- function(A, x0 = NULL, tol = 1e-6, max_iter = 100) {
+  n <- nrow(A)
+  x <- if (is.null(x0)) rep(1, n) else x0
+  x <- x / sqrt(sum(x^2))
+
+  for (k in 1:max_iter) {
+    y <- A %*% x
+    lam <- sum(x * y)
+    x_new <- y / sqrt(sum(y^2))
+    if (sqrt(sum((x_new - x)^2)) < tol)
+      return(list(eigenvalue = lam, eigenvector = as.vector(x_new)))
+    x <- x_new
+  }
+  stop("Method failed")
+}`
+  }} />
 </section>

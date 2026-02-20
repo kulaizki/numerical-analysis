@@ -2,6 +2,7 @@
   import KaTeX from '$lib/components/KaTeX.svelte';
   import Chart from '$lib/components/Chart.svelte';
   import { Card, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
 
   const DEFAULT_EXPR = 'x^3 - x - 2';
   let funcExpr = $state(DEFAULT_EXPR);
@@ -514,4 +515,35 @@
       </div>
     {/if}
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: f, x0, x1, TOL, max_iter
+OUTPUT: approximate root x
+
+for n = 1, 2, ..., max_iter:
+    x_new = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0))
+    if |x_new - x1| < TOL:
+        RETURN x_new
+    x0 = x1
+    x1 = x_new
+
+RETURN "Method failed"`,
+    python: `def secant(f, x0, x1, tol=1e-6, max_iter=50):
+    for n in range(1, max_iter + 1):
+        x_new = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0))
+        if abs(x_new - x1) < tol:
+            return x_new
+        x0 = x1
+        x1 = x_new
+    raise ValueError("Method failed")`,
+    r: `secant <- function(f, x0, x1, tol = 1e-6, max_iter = 50) {
+  for (n in 1:max_iter) {
+    x_new <- x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0))
+    if (abs(x_new - x1) < tol) return(x_new)
+    x0 <- x1
+    x1 <- x_new
+  }
+  stop("Method failed")
+}`
+  }} />
 </div>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import KaTeX from '$lib/components/KaTeX.svelte';
 	import { Card, Badge, Button, Input } from '$lib/components/ui';
+	import CodeTabs from '$lib/components/CodeTabs.svelte';
 	import { computeHeun, type StepData } from '../solvers';
 	import {
 		setupCanvas,
@@ -257,4 +258,45 @@
 			Hint: Predictor = 1 + 0.5(1), then corrector uses average of slopes at t=0 and t=0.5.
 		</p>
 	</Card>
+
+	<CodeTabs codes={{
+    pseudocode: `INPUT: f(t, y), t0, y0, h, n_steps
+OUTPUT: arrays t[], y[]
+
+t[0] = t0
+y[0] = y0
+for i = 0, 1, ..., n_steps - 1:
+    k1 = f(t[i], y[i])
+    k2 = f(t[i] + h, y[i] + h * k1)
+    y[i+1] = y[i] + (h / 2) * (k1 + k2)
+    t[i+1] = t[i] + h
+
+RETURN t, y`,
+    python: `import numpy as np
+
+def heun(f, t0, y0, h, n_steps):
+    t = np.zeros(n_steps + 1)
+    y = np.zeros(n_steps + 1)
+    t[0], y[0] = t0, y0
+
+    for i in range(n_steps):
+        k1 = f(t[i], y[i])
+        k2 = f(t[i] + h, y[i] + h * k1)
+        y[i + 1] = y[i] + (h / 2) * (k1 + k2)
+        t[i + 1] = t[i] + h
+    return t, y`,
+    r: `heun <- function(f, t0, y0, h, n_steps) {
+  t <- numeric(n_steps + 1)
+  y <- numeric(n_steps + 1)
+  t[1] <- t0; y[1] <- y0
+
+  for (i in 1:n_steps) {
+    k1 <- f(t[i], y[i])
+    k2 <- f(t[i] + h, y[i] + h * k1)
+    y[i + 1] <- y[i] + (h / 2) * (k1 + k2)
+    t[i + 1] <- t[i] + h
+  }
+  list(t = t, y = y)
+}`
+  }} />
 </div>

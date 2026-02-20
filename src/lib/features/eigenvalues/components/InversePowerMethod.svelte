@@ -2,6 +2,7 @@
   import KaTeX from '$lib/components/KaTeX.svelte';
   import Chart from '$lib/components/Chart.svelte';
   import { Card, Badge, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
   import {
     matrixVectorMultiply,
     normalize,
@@ -340,4 +341,53 @@
       </div>
     {/each}
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: A, σ (shift), x0, TOL, max_iter
+OUTPUT: eigenvalue λ nearest to σ, eigenvector x
+
+x = x0 / ||x0||
+for k = 1, 2, ..., max_iter:
+    Solve (A - σI)y = x
+    x_new = y / ||y||
+    λ = x_new^T * A * x_new
+    if ||x_new - x|| < TOL:
+        RETURN λ, x_new
+    x = x_new
+
+RETURN "Method failed"`,
+    python: `import numpy as np
+from numpy.linalg import solve, norm
+
+def inverse_power(A, sigma=0, x0=None, tol=1e-6, max_iter=100):
+    n = A.shape[0]
+    x = np.ones(n) if x0 is None else x0.copy()
+    x = x / norm(x)
+    B = A - sigma * np.eye(n)
+
+    for k in range(max_iter):
+        y = solve(B, x)
+        x_new = y / norm(y)
+        lam = x_new @ A @ x_new
+        if norm(x_new - x) < tol:
+            return lam, x_new
+        x = x_new
+    raise ValueError("Method failed")`,
+    r: `inverse_power <- function(A, sigma = 0, x0 = NULL, tol = 1e-6, max_iter = 100) {
+  n <- nrow(A)
+  x <- if (is.null(x0)) rep(1, n) else x0
+  x <- x / sqrt(sum(x^2))
+  B <- A - sigma * diag(n)
+
+  for (k in 1:max_iter) {
+    y <- solve(B, x)
+    x_new <- y / sqrt(sum(y^2))
+    lam <- sum(x_new * (A %*% x_new))
+    if (sqrt(sum((x_new - x)^2)) < tol)
+      return(list(eigenvalue = lam, eigenvector = as.vector(x_new)))
+    x <- x_new
+  }
+  stop("Method failed")
+}`
+  }} />
 </section>

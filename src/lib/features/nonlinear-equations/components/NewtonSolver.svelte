@@ -2,6 +2,7 @@
   import KaTeX from '$lib/components/KaTeX.svelte';
   import Chart from '$lib/components/Chart.svelte';
   import { Card, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
 
   const DEFAULT_EXPR = 'x^3 - x - 2';
   const DEFAULT_DERIV = '3*x^2 - 1';
@@ -563,4 +564,35 @@
       </div>
     {/if}
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: f, f', x0, TOL, max_iter
+OUTPUT: approximate root x
+
+x = x0
+for n = 1, 2, ..., max_iter:
+    x_new = x - f(x) / f'(x)
+    if |x_new - x| < TOL:
+        RETURN x_new
+    x = x_new
+
+RETURN "Method failed"`,
+    python: `def newton(f, df, x0, tol=1e-6, max_iter=50):
+    x = x0
+    for n in range(1, max_iter + 1):
+        x_new = x - f(x) / df(x)
+        if abs(x_new - x) < tol:
+            return x_new
+        x = x_new
+    raise ValueError("Method failed")`,
+    r: `newton <- function(f, df, x0, tol = 1e-6, max_iter = 50) {
+  x <- x0
+  for (n in 1:max_iter) {
+    x_new <- x - f(x) / df(x)
+    if (abs(x_new - x) < tol) return(x_new)
+    x <- x_new
+  }
+  stop("Method failed")
+}`
+  }} />
 </div>

@@ -2,6 +2,7 @@
   import KaTeX from '$lib/components/KaTeX.svelte';
   import Chart from '$lib/components/Chart.svelte';
   import { Card, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
   import { DEFAULT_A, DEFAULT_B, type IterationEntry } from '../types.ts';
   import {
     deepCopyMatrix,
@@ -390,4 +391,50 @@
       </div>
     </div>
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: A, b, x0, TOL, max_iter
+OUTPUT: approximate solution x
+
+x = x0
+for k = 1, 2, ..., max_iter:
+    x_old = copy of x
+    for i = 1 to n:
+        sum = 0
+        for j = 1 to n, j ≠ i:
+            sum = sum + A[i][j] * x[j]
+        x[i] = (b[i] - sum) / A[i][i]
+    if ||x - x_old|| < TOL:
+        RETURN x
+
+RETURN "Method failed"`,
+    python: `import numpy as np
+
+def gauss_seidel(A, b, x0=None, tol=1e-6, max_iter=100):
+    n = len(b)
+    x = np.zeros(n) if x0 is None else x0.copy()
+
+    for k in range(max_iter):
+        x_old = x.copy()
+        for i in range(n):
+            s = sum(A[i,j] * x[j] for j in range(n) if j != i)
+            x[i] = (b[i] - s) / A[i, i]
+        if np.linalg.norm(x - x_old) < tol:
+            return x
+    raise ValueError("Method failed")`,
+    r: `gauss_seidel <- function(A, b, x0 = NULL, tol = 1e-6, max_iter = 100) {
+  n <- length(b)
+  x <- if (is.null(x0)) rep(0, n) else x0
+
+  for (k in 1:max_iter) {
+    x_old <- x
+    for (i in 1:n) {
+      s <- sum(A[i, -i] * x[-i])
+      x[i] <- (b[i] - s) / A[i, i]
+    }
+    if (sqrt(sum((x - x_old)^2)) < tol) return(x)
+  }
+  stop("Method failed")
+}`
+  }} />
 </div>

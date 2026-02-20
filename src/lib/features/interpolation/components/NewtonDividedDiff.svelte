@@ -2,6 +2,7 @@
   import KaTeX from '$lib/components/KaTeX.svelte';
   import Chart from '$lib/components/Chart.svelte';
   import { Card, Badge, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
   import {
     type Point,
     defaultPoints,
@@ -241,4 +242,60 @@
       </div>
     </div>
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: points (x0,y0), ..., (xn,yn), target x
+OUTPUT: P(x)
+
+// Build divided difference table
+F[i][0] = y[i] for all i
+for j = 1 to n:
+    for i = j to n:
+        F[i][j] = (F[i][j-1] - F[i-1][j-1]) / (x[i] - x[i-j])
+
+// Evaluate polynomial
+P = F[0][0]
+product = 1
+for j = 1 to n:
+    product = product * (x - x[j-1])
+    P = P + F[j][j] * product
+
+RETURN P`,
+    python: `import numpy as np
+
+def newton_divided_diff(x_pts, y_pts, x):
+    n = len(x_pts)
+    F = np.zeros((n, n))
+    F[:, 0] = y_pts
+
+    for j in range(1, n):
+        for i in range(j, n):
+            F[i][j] = (F[i][j-1] - F[i-1][j-1]) / (x_pts[i] - x_pts[i-j])
+
+    result = F[0][0]
+    product = 1.0
+    for j in range(1, n):
+        product *= (x - x_pts[j - 1])
+        result += F[j][j] * product
+    return result`,
+    r: `newton_divided_diff <- function(x_pts, y_pts, x) {
+  n <- length(x_pts)
+  F <- matrix(0, n, n)
+  F[, 1] <- y_pts
+
+  for (j in 2:n) {
+    for (i in j:n) {
+      F[i, j] <- (F[i, j-1] - F[i-1, j-1]) / (x_pts[i] - x_pts[i-j+1])
+    }
+  }
+
+  result <- F[1, 1]
+  product <- 1
+  for (j in 2:n) {
+    product <- product * (x - x_pts[j - 1])
+    result <- result + F[j, j] * product
+  }
+  return(result)
+}`
+  }} />
 </div>

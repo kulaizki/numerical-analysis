@@ -2,6 +2,7 @@
   import KaTeX from '$lib/components/KaTeX.svelte';
   import Chart from '$lib/components/Chart.svelte';
   import { Card, Badge, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
   import { qrFactorization, matrixMultiply } from '../utils';
 
   // === STATE ===
@@ -249,4 +250,45 @@
       </div>
     {/each}
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: A, TOL, max_iter
+OUTPUT: eigenvalues on diagonal of A
+
+for k = 1, 2, ..., max_iter:
+    Q, R = QR_factorization(A)
+    A = R * Q
+    if off-diagonal elements < TOL:
+        RETURN diagonal of A
+
+RETURN diagonal of A`,
+    python: `import numpy as np
+
+def qr_algorithm(A, tol=1e-6, max_iter=100):
+    A = A.astype(float).copy()
+    n = A.shape[0]
+
+    for k in range(max_iter):
+        Q, R = np.linalg.qr(A)
+        A = R @ Q
+        off_diag = np.sqrt(sum(
+            A[i, j]**2 for i in range(n) for j in range(n) if i != j
+        ))
+        if off_diag < tol:
+            break
+    return np.diag(A)`,
+    r: `qr_algorithm <- function(A, tol = 1e-6, max_iter = 100) {
+  n <- nrow(A)
+
+  for (k in 1:max_iter) {
+    decomp <- qr(A)
+    Q <- qr.Q(decomp)
+    R <- qr.R(decomp)
+    A <- R %*% Q
+    off_diag <- sqrt(sum(A[row(A) != col(A)]^2))
+    if (off_diag < tol) break
+  }
+  return(diag(A))
+}`
+  }} />
 </section>

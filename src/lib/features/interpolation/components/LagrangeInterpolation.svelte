@@ -2,6 +2,7 @@
   import KaTeX from '$lib/components/KaTeX.svelte';
   import Chart from '$lib/components/Chart.svelte';
   import { Card, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
   import {
     type Point,
     defaultPoints,
@@ -334,4 +335,43 @@
       </div>
     </div>
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: points (x0,y0), ..., (xn,yn), target x
+OUTPUT: P(x)
+
+P = 0
+for i = 0 to n:
+    L_i = 1
+    for j = 0 to n, j ≠ i:
+        L_i = L_i * (x - x[j]) / (x[i] - x[j])
+    P = P + y[i] * L_i
+
+RETURN P`,
+    python: `def lagrange(x_pts, y_pts, x):
+    n = len(x_pts)
+    result = 0.0
+
+    for i in range(n):
+        L_i = 1.0
+        for j in range(n):
+            if j != i:
+                L_i *= (x - x_pts[j]) / (x_pts[i] - x_pts[j])
+        result += y_pts[i] * L_i
+    return result`,
+    r: `lagrange <- function(x_pts, y_pts, x) {
+  n <- length(x_pts)
+  result <- 0
+
+  for (i in 1:n) {
+    L_i <- 1
+    for (j in 1:n) {
+      if (j != i)
+        L_i <- L_i * (x - x_pts[j]) / (x_pts[i] - x_pts[j])
+    }
+    result <- result + y_pts[i] * L_i
+  }
+  return(result)
+}`
+  }} />
 </div>

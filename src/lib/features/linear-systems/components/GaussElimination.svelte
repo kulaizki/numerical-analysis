@@ -1,6 +1,7 @@
 <script lang="ts">
   import KaTeX from '$lib/components/KaTeX.svelte';
   import { Card, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
   import { DEFAULT_A, DEFAULT_B, type GaussStep } from '../types.ts';
   import { deepCopyMatrix } from '../utils.ts';
 
@@ -349,4 +350,61 @@
       </div>
     {/if}
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: augmented matrix [A|b] of size n×(n+1)
+OUTPUT: solution vector x
+
+// Forward elimination
+for k = 1 to n-1:
+    for i = k+1 to n:
+        m = A[i][k] / A[k][k]
+        for j = k to n+1:
+            A[i][j] = A[i][j] - m * A[k][j]
+
+// Back substitution
+for i = n down to 1:
+    x[i] = A[i][n+1]
+    for j = i+1 to n:
+        x[i] = x[i] - A[i][j] * x[j]
+    x[i] = x[i] / A[i][i]
+
+RETURN x`,
+    python: `import numpy as np
+
+def gauss_elimination(A, b):
+    n = len(b)
+    Ab = np.column_stack([A.astype(float), b.astype(float)])
+
+    # Forward elimination
+    for k in range(n - 1):
+        for i in range(k + 1, n):
+            m = Ab[i, k] / Ab[k, k]
+            Ab[i, k:] -= m * Ab[k, k:]
+
+    # Back substitution
+    x = np.zeros(n)
+    for i in range(n - 1, -1, -1):
+        x[i] = (Ab[i, -1] - Ab[i, i+1:n] @ x[i+1:]) / Ab[i, i]
+    return x`,
+    r: `gauss_elimination <- function(A, b) {
+  n <- length(b)
+  Ab <- cbind(A, b)
+
+  # Forward elimination
+  for (k in 1:(n - 1)) {
+    for (i in (k + 1):n) {
+      m <- Ab[i, k] / Ab[k, k]
+      Ab[i, ] <- Ab[i, ] - m * Ab[k, ]
+    }
+  }
+
+  # Back substitution
+  x <- numeric(n)
+  for (i in n:1) {
+    x[i] <- (Ab[i, n + 1] - sum(Ab[i, (i+1):n] * x[(i+1):n])) / Ab[i, i]
+  }
+  return(x)
+}`
+  }} />
 </div>

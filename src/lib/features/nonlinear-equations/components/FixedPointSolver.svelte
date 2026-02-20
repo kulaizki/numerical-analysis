@@ -1,6 +1,7 @@
 <script lang="ts">
   import KaTeX from '$lib/components/KaTeX.svelte';
   import { Card, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
 
   const fixedPointG = (x: number) => Math.cbrt(x + 2);
 
@@ -218,4 +219,35 @@
       </div>
     </div>
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: g, x0, TOL, max_iter
+OUTPUT: approximate fixed point x
+
+x = x0
+for n = 1, 2, ..., max_iter:
+    x_new = g(x)
+    if |x_new - x| < TOL:
+        RETURN x_new
+    x = x_new
+
+RETURN "Method failed"`,
+    python: `def fixed_point(g, x0, tol=1e-6, max_iter=50):
+    x = x0
+    for n in range(1, max_iter + 1):
+        x_new = g(x)
+        if abs(x_new - x) < tol:
+            return x_new
+        x = x_new
+    raise ValueError("Method failed")`,
+    r: `fixed_point <- function(g, x0, tol = 1e-6, max_iter = 50) {
+  x <- x0
+  for (n in 1:max_iter) {
+    x_new <- g(x)
+    if (abs(x_new - x) < tol) return(x_new)
+    x <- x_new
+  }
+  stop("Method failed")
+}`
+  }} />
 </div>

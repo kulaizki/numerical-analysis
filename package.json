@@ -24,6 +24,7 @@
 	},
 	"dependencies": {
 		"chart.js": "^4.5.1",
+		"highlight.js": "^11.11.1",
 		"katex": "^0.16.28"
 	}
 }

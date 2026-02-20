@@ -1,6 +1,7 @@
 <script lang="ts">
 	import KaTeX from '$lib/components/KaTeX.svelte';
 	import { Card, Badge, Button, Input } from '$lib/components/ui';
+	import CodeTabs from '$lib/components/CodeTabs.svelte';
 	import { computeEuler, type StepData } from '../solvers';
 	import {
 		setupCanvas,
@@ -228,4 +229,39 @@
 			Hint: Compute y(0.5) first, then use it to find y(1).
 		</p>
 	</Card>
+
+	<CodeTabs codes={{
+    pseudocode: `INPUT: f(t, y), t0, y0, h, n_steps
+OUTPUT: arrays t[], y[]
+
+t[0] = t0
+y[0] = y0
+for i = 0, 1, ..., n_steps - 1:
+    y[i+1] = y[i] + h * f(t[i], y[i])
+    t[i+1] = t[i] + h
+
+RETURN t, y`,
+    python: `import numpy as np
+
+def euler(f, t0, y0, h, n_steps):
+    t = np.zeros(n_steps + 1)
+    y = np.zeros(n_steps + 1)
+    t[0], y[0] = t0, y0
+
+    for i in range(n_steps):
+        y[i + 1] = y[i] + h * f(t[i], y[i])
+        t[i + 1] = t[i] + h
+    return t, y`,
+    r: `euler <- function(f, t0, y0, h, n_steps) {
+  t <- numeric(n_steps + 1)
+  y <- numeric(n_steps + 1)
+  t[1] <- t0; y[1] <- y0
+
+  for (i in 1:n_steps) {
+    y[i + 1] <- y[i] + h * f(t[i], y[i])
+    t[i + 1] <- t[i] + h
+  }
+  list(t = t, y = y)
+}`
+  }} />
 </div>

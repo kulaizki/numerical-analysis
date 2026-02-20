@@ -2,6 +2,7 @@
   import KaTeX from '$lib/components/KaTeX.svelte';
   import Chart from '$lib/components/Chart.svelte';
   import { Card, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
   import { DEFAULT_A, DEFAULT_B, type IterationEntry } from '../types.ts';
   import {
     deepCopyMatrix,
@@ -371,4 +372,53 @@
       </div>
     {/if}
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: A, b, x0, TOL, max_iter
+OUTPUT: approximate solution x
+
+x = x0
+for k = 1, 2, ..., max_iter:
+    x_new = zero vector
+    for i = 1 to n:
+        sum = 0
+        for j = 1 to n, j ≠ i:
+            sum = sum + A[i][j] * x[j]
+        x_new[i] = (b[i] - sum) / A[i][i]
+    if ||x_new - x|| < TOL:
+        RETURN x_new
+    x = x_new
+
+RETURN "Method failed"`,
+    python: `import numpy as np
+
+def jacobi(A, b, x0=None, tol=1e-6, max_iter=100):
+    n = len(b)
+    x = np.zeros(n) if x0 is None else x0.copy()
+
+    for k in range(max_iter):
+        x_new = np.zeros(n)
+        for i in range(n):
+            s = sum(A[i,j] * x[j] for j in range(n) if j != i)
+            x_new[i] = (b[i] - s) / A[i, i]
+        if np.linalg.norm(x_new - x) < tol:
+            return x_new
+        x = x_new
+    raise ValueError("Method failed")`,
+    r: `jacobi <- function(A, b, x0 = NULL, tol = 1e-6, max_iter = 100) {
+  n <- length(b)
+  x <- if (is.null(x0)) rep(0, n) else x0
+
+  for (k in 1:max_iter) {
+    x_new <- numeric(n)
+    for (i in 1:n) {
+      s <- sum(A[i, -i] * x[-i])
+      x_new[i] <- (b[i] - s) / A[i, i]
+    }
+    if (sqrt(sum((x_new - x)^2)) < tol) return(x_new)
+    x <- x_new
+  }
+  stop("Method failed")
+}`
+  }} />
 </div>

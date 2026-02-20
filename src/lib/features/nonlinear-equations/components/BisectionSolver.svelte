@@ -2,6 +2,7 @@
   import KaTeX from '$lib/components/KaTeX.svelte';
   import Chart from '$lib/components/Chart.svelte';
   import { Card, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
 
   const DEFAULT_EXPR = 'x^3 - x - 2';
   let funcExpr = $state(DEFAULT_EXPR);
@@ -500,4 +501,42 @@
       </div>
     {/if}
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: f, a, b, TOL, max_iter
+OUTPUT: approximate root c
+
+for n = 1, 2, ..., max_iter:
+    c = (a + b) / 2
+    if f(b) * f(c) > 0:
+        b = c
+    else:
+        a = c
+    if |b - a| < TOL:
+        RETURN c
+
+RETURN "Method failed"`,
+    python: `def bisection(f, a, b, tol=1e-6, max_iter=50):
+    for n in range(1, max_iter + 1):
+        c = (a + b) / 2
+        if f(b) * f(c) > 0:
+            b = c
+        else:
+            a = c
+        if abs(b - a) < tol:
+            return c
+    raise ValueError("Method failed")`,
+    r: `bisection <- function(f, a, b, tol = 1e-6, max_iter = 50) {
+  for (n in 1:max_iter) {
+    c <- (a + b) / 2
+    if (f(b) * f(c) > 0) {
+      b <- c
+    } else {
+      a <- c
+    }
+    if (abs(b - a) < tol) return(c)
+  }
+  stop("Method failed")
+}`
+  }} />
 </div>

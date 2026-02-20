@@ -1,6 +1,7 @@
 <script lang="ts">
 	import KaTeX from '$lib/components/KaTeX.svelte';
 	import { Card, Badge, Button, Input } from '$lib/components/ui';
+	import CodeTabs from '$lib/components/CodeTabs.svelte';
 	import { computeRK4, type StepData } from '../solvers';
 	import {
 		setupCanvas,
@@ -362,4 +363,51 @@
 			Hint: Compute k₁, k₂, k₃, k₄ and use the weighted formula.
 		</p>
 	</Card>
+
+	<CodeTabs codes={{
+    pseudocode: `INPUT: f(t, y), t0, y0, h, n_steps
+OUTPUT: arrays t[], y[]
+
+t[0] = t0
+y[0] = y0
+for i = 0, 1, ..., n_steps - 1:
+    k1 = h * f(t[i], y[i])
+    k2 = h * f(t[i] + h/2, y[i] + k1/2)
+    k3 = h * f(t[i] + h/2, y[i] + k2/2)
+    k4 = h * f(t[i] + h, y[i] + k3)
+    y[i+1] = y[i] + (k1 + 2*k2 + 2*k3 + k4) / 6
+    t[i+1] = t[i] + h
+
+RETURN t, y`,
+    python: `import numpy as np
+
+def rk4(f, t0, y0, h, n_steps):
+    t = np.zeros(n_steps + 1)
+    y = np.zeros(n_steps + 1)
+    t[0], y[0] = t0, y0
+
+    for i in range(n_steps):
+        k1 = h * f(t[i], y[i])
+        k2 = h * f(t[i] + h/2, y[i] + k1/2)
+        k3 = h * f(t[i] + h/2, y[i] + k2/2)
+        k4 = h * f(t[i] + h, y[i] + k3)
+        y[i + 1] = y[i] + (k1 + 2*k2 + 2*k3 + k4) / 6
+        t[i + 1] = t[i] + h
+    return t, y`,
+    r: `rk4 <- function(f, t0, y0, h, n_steps) {
+  t <- numeric(n_steps + 1)
+  y <- numeric(n_steps + 1)
+  t[1] <- t0; y[1] <- y0
+
+  for (i in 1:n_steps) {
+    k1 <- h * f(t[i], y[i])
+    k2 <- h * f(t[i] + h/2, y[i] + k1/2)
+    k3 <- h * f(t[i] + h/2, y[i] + k2/2)
+    k4 <- h * f(t[i] + h, y[i] + k3)
+    y[i + 1] <- y[i] + (k1 + 2*k2 + 2*k3 + k4) / 6
+    t[i + 1] <- t[i] + h
+  }
+  list(t = t, y = y)
+}`
+  }} />
 </div>

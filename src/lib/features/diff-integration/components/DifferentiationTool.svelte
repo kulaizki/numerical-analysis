@@ -1,6 +1,7 @@
 <script lang="ts">
   import KaTeX from '$lib/components/KaTeX.svelte';
   import { Card, Badge, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
   import { onMount } from 'svelte';
   import { evaluateFunc, checkAnswer } from '../utils';
 
@@ -351,6 +352,36 @@
       {/each}
     </div>
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `// Forward difference
+f'(x) ≈ (f(x + h) - f(x)) / h
+
+// Backward difference
+f'(x) ≈ (f(x) - f(x - h)) / h
+
+// Central difference (most accurate)
+f'(x) ≈ (f(x + h) - f(x - h)) / (2h)`,
+    python: `def forward_diff(f, x, h=1e-5):
+    return (f(x + h) - f(x)) / h
+
+def backward_diff(f, x, h=1e-5):
+    return (f(x) - f(x - h)) / h
+
+def central_diff(f, x, h=1e-5):
+    return (f(x + h) - f(x - h)) / (2 * h)`,
+    r: `forward_diff <- function(f, x, h = 1e-5) {
+  (f(x + h) - f(x)) / h
+}
+
+backward_diff <- function(f, x, h = 1e-5) {
+  (f(x) - f(x - h)) / h
+}
+
+central_diff <- function(f, x, h = 1e-5) {
+  (f(x + h) - f(x - h)) / (2 * h)
+}`
+  }} />
 </div>
 
 <style>

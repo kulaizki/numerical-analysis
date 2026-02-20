@@ -1,6 +1,7 @@
 <script lang="ts">
   import KaTeX from '$lib/components/KaTeX.svelte';
   import { Card, Badge, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
   import { onMount } from 'svelte';
   import { evaluateFunc, checkAnswer } from '../utils';
 
@@ -332,6 +333,43 @@
       {/each}
     </div>
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: f, a, b, n (must be even)
+OUTPUT: approximate integral
+
+h = (b - a) / n
+sum = f(a) + f(b)
+for i = 1 to n-1:
+    if i is odd:
+        sum = sum + 4 * f(a + i * h)
+    else:
+        sum = sum + 2 * f(a + i * h)
+
+RETURN (h / 3) * sum`,
+    python: `import numpy as np
+
+def simpsons(f, a, b, n):
+    if n % 2 != 0:
+        raise ValueError("n must be even")
+    h = (b - a) / n
+    x = np.linspace(a, b, n + 1)
+    y = np.array([f(xi) for xi in x])
+
+    return (h / 3) * (y[0] + y[-1]
+        + 4 * np.sum(y[1:-1:2])
+        + 2 * np.sum(y[2:-2:2]))`,
+    r: `simpsons <- function(f, a, b, n) {
+  if (n %% 2 != 0) stop("n must be even")
+  h <- (b - a) / n
+  x <- seq(a, b, length.out = n + 1)
+  y <- sapply(x, f)
+
+  (h / 3) * (y[1] + y[n + 1]
+    + 4 * sum(y[seq(2, n, by = 2)])
+    + 2 * sum(y[seq(3, n - 1, by = 2)]))
+}`
+  }} />
 </div>
 
 <style>

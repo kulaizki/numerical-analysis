@@ -1,6 +1,7 @@
 <script lang="ts">
   import KaTeX from '$lib/components/KaTeX.svelte';
   import { Card, Badge, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
   import { onMount } from 'svelte';
   import { evaluateFunc, checkAnswer } from '../utils';
 
@@ -310,6 +311,31 @@
       {/each}
     </div>
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: f, a, b, n (number of subintervals)
+OUTPUT: approximate integral
+
+h = (b - a) / n
+sum = f(a) + f(b)
+for i = 1 to n-1:
+    sum = sum + 2 * f(a + i * h)
+
+RETURN (h / 2) * sum`,
+    python: `import numpy as np
+
+def trapezoidal(f, a, b, n):
+    h = (b - a) / n
+    x = np.linspace(a, b, n + 1)
+    y = np.array([f(xi) for xi in x])
+    return h * (y[0]/2 + np.sum(y[1:-1]) + y[-1]/2)`,
+    r: `trapezoidal <- function(f, a, b, n) {
+  h <- (b - a) / n
+  x <- seq(a, b, length.out = n + 1)
+  y <- sapply(x, f)
+  h * (y[1]/2 + sum(y[2:n]) + y[n + 1]/2)
+}`
+  }} />
 </div>
 
 <style>

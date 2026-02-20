@@ -1,6 +1,7 @@
 <script lang="ts">
   import KaTeX from '$lib/components/KaTeX.svelte';
   import { Card, Button, Input } from '$lib/components/ui';
+  import CodeTabs from '$lib/components/CodeTabs.svelte';
   import { DEFAULT_A, DEFAULT_B, type LUStep } from '../types.ts';
   import { deepCopyMatrix } from '../utils.ts';
 
@@ -381,4 +382,68 @@
       </div>
     </div>
   </Card>
+
+  <CodeTabs codes={{
+    pseudocode: `INPUT: matrix A of size n×n
+OUTPUT: lower triangular L, upper triangular U
+
+L = identity matrix of size n
+U = copy of A
+
+for k = 1 to n-1:
+    for i = k+1 to n:
+        L[i][k] = U[i][k] / U[k][k]
+        for j = k to n:
+            U[i][j] = U[i][j] - L[i][k] * U[k][j]
+
+// Solve Ly = b (forward substitution)
+// Solve Ux = y (back substitution)
+RETURN L, U`,
+    python: `import numpy as np
+
+def lu_decomposition(A):
+    n = len(A)
+    L = np.eye(n)
+    U = A.astype(float).copy()
+
+    for k in range(n - 1):
+        for i in range(k + 1, n):
+            L[i, k] = U[i, k] / U[k, k]
+            U[i, k:] -= L[i, k] * U[k, k:]
+    return L, U
+
+def lu_solve(L, U, b):
+    n = len(b)
+    y = np.zeros(n)
+    for i in range(n):
+        y[i] = b[i] - L[i, :i] @ y[:i]
+    x = np.zeros(n)
+    for i in range(n - 1, -1, -1):
+        x[i] = (y[i] - U[i, i+1:] @ x[i+1:]) / U[i, i]
+    return x`,
+    r: `lu_decomposition <- function(A) {
+  n <- nrow(A)
+  L <- diag(n)
+  U <- A
+
+  for (k in 1:(n - 1)) {
+    for (i in (k + 1):n) {
+      L[i, k] <- U[i, k] / U[k, k]
+      U[i, ] <- U[i, ] - L[i, k] * U[k, ]
+    }
+  }
+  list(L = L, U = U)
+}
+
+lu_solve <- function(L, U, b) {
+  n <- length(b)
+  y <- numeric(n)
+  for (i in 1:n)
+    y[i] <- b[i] - sum(L[i, 1:(i-1)] * y[1:(i-1)])
+  x <- numeric(n)
+  for (i in n:1)
+    x[i] <- (y[i] - sum(U[i, (i+1):n] * x[(i+1):n])) / U[i, i]
+  return(x)
+}`
+  }} />
 </div>

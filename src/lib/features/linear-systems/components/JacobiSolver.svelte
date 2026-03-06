@@ -317,17 +317,33 @@
           <KaTeX math={"D = \\begin{pmatrix} 6 & 0 & 0 \\\\ 0 & 7 & 0 \\\\ 0 & 0 & -5 \\end{pmatrix}, \\quad L = \\begin{pmatrix} 0 & 0 & 0 \\\\ -2 & 0 & 0 \\\\ 1 & 2 & 0 \\end{pmatrix}, \\quad U = \\begin{pmatrix} 0 & -2 & 1 \\\\ 0 & 0 & 2 \\\\ 0 & 0 & 0 \\end{pmatrix}"} displayMode={true} />
         </div>
 
-        <!-- Step 2 -->
+        <!-- Step 2: D inverse and D inverse b -->
         <div class="space-y-2">
-          <p class="font-semibold text-primary">Step 2: Iteration Formula</p>
+          <p class="font-semibold text-primary">Step 2: Compute D⁻¹ and D⁻¹b</p>
+          <KaTeX math={"D^{-1} = \\begin{pmatrix} \\frac{1}{6} & 0 & 0 \\\\ 0 & \\frac{1}{7} & 0 \\\\ 0 & 0 & \\frac{1}{-5} \\end{pmatrix}"} displayMode={true} />
+          <KaTeX math={"D^{-1}\\mathbf{b} = \\begin{pmatrix} \\frac{1}{6} \\\\ \\frac{1}{7} \\\\ -\\frac{1}{5} \\end{pmatrix} \\begin{pmatrix} 11 \\\\ 5 \\\\ -1 \\end{pmatrix} = \\begin{pmatrix} 1.8333 \\\\ 0.7143 \\\\ 0.2000 \\end{pmatrix}"} displayMode={true} />
+          <p class="text-sm text-muted">This is the first iteration result when starting from x⁽⁰⁾ = (0, 0, 0).</p>
+        </div>
+
+        <!-- Step 3: Iteration Formula -->
+        <div class="space-y-2">
+          <p class="font-semibold text-primary">Step 3: Iteration Formula</p>
           <KaTeX math={"\\mathbf{x}^{(k)} = -D^{-1}(L + U)\\,\\mathbf{x}^{(k-1)} + D^{-1}\\mathbf{b}"} displayMode={true} />
           <p class="text-sm">Expanded component-wise:</p>
           <KaTeX math={"\\begin{aligned} x_1^{(k)} &= \\frac{1}{6}\\left(11 + 2x_2^{(k-1)} - x_3^{(k-1)}\\right) \\\\ x_2^{(k)} &= \\frac{1}{7}\\left(5 + 2x_1^{(k-1)} - 2x_3^{(k-1)}\\right) \\\\ x_3^{(k)} &= \\frac{1}{-5}\\left(-1 - x_1^{(k-1)} - 2x_2^{(k-1)}\\right) \\end{aligned}"} displayMode={true} />
+          <p class="text-sm mt-2">All three use the <strong>old</strong> values x⁽ᵏ⁻¹⁾ — nothing is updated mid-iteration.</p>
         </div>
 
-        <!-- Step 3: Iterations table -->
+        <!-- Step 4: Iterations table -->
         <div class="space-y-3">
-          <p class="font-semibold text-primary">Step 3: Iterations from x<sup>(0)</sup> = (0, 0, 0)</p>
+          <p class="font-semibold text-primary">Step 4: Iterations from x<sup>(0)</sup> = (0, 0, 0)</p>
+
+          <div class="p-4 border border-border bg-bg-2 space-y-2 text-sm">
+            <p class="font-semibold text-primary">Stopping Criterion — Relative Approximate Error (εa):</p>
+            <KaTeX math={"\\varepsilon_a = \\max_i \\left| \\frac{x_i^{(k)} - x_i^{(k-1)}}{x_i^{(k)}} \\right| \\times 100\\%"} displayMode={true} />
+            <p class="text-muted">Stop when εa falls below the desired tolerance (e.g. 5%, 1%, 0.5%).</p>
+          </div>
+
           <div class="overflow-x-auto">
             <table class="w-full font-mono text-sm border border-border">
               <thead>
@@ -336,25 +352,27 @@
                   <th class="py-2 px-4 text-right text-tertiary">x₁</th>
                   <th class="py-2 px-4 text-right text-tertiary">x₂</th>
                   <th class="py-2 px-4 text-right text-tertiary">x₃</th>
+                  <th class="py-2 px-4 text-right text-tertiary">εa (%)</th>
                 </tr>
               </thead>
               <tbody>
                 {#each [
-                  [0, '0.0000', '0.0000', '0.0000'],
-                  [1, '1.8333', '0.7143', '0.2000'],
-                  [2, '2.0381', '1.1810', '0.8524'],
-                  [3, '2.0849', '1.0531', '1.0800'],
-                  [4, '2.0044', '1.0014', '1.0382'],
-                  [5, '1.9941', '0.9903', '1.0014'],
-                  [6, '1.9965', '0.9979', '0.9950'],
-                  [7, '1.9990', '0.9986', '0.9992'],
-                  [8, '2.0004', '1.0005', '1.0002'],
+                  [0, '0.0000', '0.0000', '0.0000', '—'],
+                  [1, '1.8333', '0.7143', '0.2000', '100.00'],
+                  [2, '2.0381', '1.1810', '0.8524', '76.54'],
+                  [3, '2.0849', '1.0531', '1.0800', '21.07'],
+                  [4, '2.0044', '1.0014', '1.0382', '5.16'],
+                  [5, '1.9941', '0.9903', '1.0014', '3.67'],
+                  [6, '1.9965', '0.9979', '0.9950', '0.76'],
+                  [7, '1.9990', '0.9986', '0.9992', '0.42'],
+                  [8, '2.0004', '1.0005', '1.0002', '0.19'],
                 ] as row}
                   <tr class="border-b border-border/50 {row[0] === 8 ? 'bg-green-500/10' : ''}">
                     <td class="py-2 px-4 text-muted">{row[0]}</td>
                     <td class="py-2 px-4 text-right {row[0] === 8 ? 'text-green-400' : 'text-tertiary'}">{row[1]}</td>
                     <td class="py-2 px-4 text-right {row[0] === 8 ? 'text-green-400' : 'text-tertiary'}">{row[2]}</td>
                     <td class="py-2 px-4 text-right {row[0] === 8 ? 'text-green-400' : 'text-tertiary'}">{row[3]}</td>
+                    <td class="py-2 px-4 text-right {row[4] === '—' ? 'text-muted' : parseFloat(row[4] as string) < 1 ? 'text-green-400' : 'text-yellow-400'}">{row[4]}</td>
                   </tr>
                 {/each}
               </tbody>

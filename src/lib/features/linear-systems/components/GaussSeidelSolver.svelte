@@ -273,16 +273,40 @@
           </div>
         </div>
 
+        <!-- Step 1: L + D + U -->
         <div>
-          <p class="font-semibold text-primary mb-2">Matrix Update Formula:</p>
-          <KaTeX math={"\\mathbf{x}^{(k+1)} = -(L+D)^{-1}U\\mathbf{x}^{(k)} + (L+D)^{-1}\\mathbf{b}"} displayMode={true} />
+          <p class="font-semibold text-primary mb-2">Step 1: Split A = D + L + U</p>
+          <KaTeX math={"D = \\begin{pmatrix} 6 & 0 & 0 \\\\ 0 & 7 & 0 \\\\ 0 & 0 & -5 \\end{pmatrix}, \\quad L = \\begin{pmatrix} 0 & 0 & 0 \\\\ -2 & 0 & 0 \\\\ 1 & 2 & 0 \\end{pmatrix}, \\quad U = \\begin{pmatrix} 0 & -2 & 1 \\\\ 0 & 0 & 2 \\\\ 0 & 0 & 0 \\end{pmatrix}"} displayMode={true} />
+        </div>
+
+        <!-- Step 2: D inverse and D inverse b -->
+        <div class="space-y-2">
+          <p class="font-semibold text-primary">Step 2: Compute D⁻¹ and D⁻¹b</p>
+          <KaTeX math={"D^{-1} = \\begin{pmatrix} \\frac{1}{6} & 0 & 0 \\\\ 0 & \\frac{1}{7} & 0 \\\\ 0 & 0 & -\\frac{1}{5} \\end{pmatrix}"} displayMode={true} />
+          <KaTeX math={"D^{-1}\\mathbf{b} = \\begin{pmatrix} 1.8333 \\\\ 0.7143 \\\\ 0.2000 \\end{pmatrix}"} displayMode={true} />
+        </div>
+
+        <!-- Step 3: Formula -->
+        <div>
+          <p class="font-semibold text-primary mb-2">Step 3: Matrix Update Formula</p>
+          <KaTeX math={"\\mathbf{x}^{(k+1)} = -(D+L)^{-1}U\\,\\mathbf{x}^{(k)} + (D+L)^{-1}\\mathbf{b}"} displayMode={true} />
+          <p class="text-sm">Expanded component-wise (solve sequentially — use updated values immediately):</p>
+          <KaTeX math={"\\begin{aligned} x_1^{(k)} &= \\frac{1}{6}\\left(11 + 2x_2^{\\color{red}(k-1)} - x_3^{\\color{red}(k-1)}\\right) \\\\ x_2^{(k)} &= \\frac{1}{7}\\left(5 + 2x_1^{\\color{green}(k)} - 2x_3^{\\color{red}(k-1)}\\right) \\\\ x_3^{(k)} &= \\frac{1}{-5}\\left(-1 - x_1^{\\color{green}(k)} - 2x_2^{\\color{green}(k)}\\right) \\end{aligned}"} displayMode={true} />
           <p class="text-sm mt-2">
-            Unlike Jacobi, updated components are used immediately within the same iteration.
+            <span class="text-green-400">Green superscripts (k)</span> = already-updated values from this iteration.
+            <span class="text-red-400">Red superscripts (k-1)</span> = old values from previous iteration.
           </p>
         </div>
 
+        <!-- Step 4: Iterations -->
         <div>
-          <p class="font-semibold text-primary mb-2">Iterations from x⁽⁰⁾ = (0, 0, 0):</p>
+          <p class="font-semibold text-primary mb-2">Step 4: Iterations from x⁽⁰⁾ = (0, 0, 0)</p>
+
+          <div class="p-4 border border-border bg-bg-2 space-y-2 text-sm mb-4">
+            <p class="font-semibold text-primary">Stopping Criterion — Relative Approximate Error (εa):</p>
+            <KaTeX math={"\\varepsilon_a = \\max_i \\left| \\frac{x_i^{(k)} - x_i^{(k-1)}}{x_i^{(k)}} \\right| \\times 100\\%"} displayMode={true} />
+            <p class="text-muted">Stop when εa falls below the desired tolerance (e.g. 5%, 1%, 0.5%).</p>
+          </div>
           <div class="overflow-x-auto">
             <table class="w-full font-mono text-sm border border-border">
               <thead>
@@ -291,45 +315,26 @@
                   <th class="text-right py-2 px-4 text-tertiary">x₁</th>
                   <th class="text-right py-2 px-4 text-tertiary">x₂</th>
                   <th class="text-right py-2 px-4 text-tertiary">x₃</th>
+                  <th class="text-right py-2 px-4 text-tertiary">εa (%)</th>
                 </tr>
               </thead>
               <tbody>
-                <tr class="border-b border-border/50">
-                  <td class="text-center py-2 px-4 text-muted">0</td>
-                  <td class="text-right py-2 px-4">0.0000</td>
-                  <td class="text-right py-2 px-4">0.0000</td>
-                  <td class="text-right py-2 px-4">0.0000</td>
-                </tr>
-                <tr class="border-b border-border/50">
-                  <td class="text-center py-2 px-4 text-muted">1</td>
-                  <td class="text-right py-2 px-4">1.8333</td>
-                  <td class="text-right py-2 px-4">1.2381</td>
-                  <td class="text-right py-2 px-4">1.0619</td>
-                </tr>
-                <tr class="border-b border-border/50">
-                  <td class="text-center py-2 px-4 text-muted">2</td>
-                  <td class="text-right py-2 px-4">2.0690</td>
-                  <td class="text-right py-2 px-4">1.0020</td>
-                  <td class="text-right py-2 px-4">1.0146</td>
-                </tr>
-                <tr class="border-b border-border/50">
-                  <td class="text-center py-2 px-4 text-muted">3</td>
-                  <td class="text-right py-2 px-4">2.0015</td>
-                  <td class="text-right py-2 px-4">0.9984</td>
-                  <td class="text-right py-2 px-4">1.0003</td>
-                </tr>
-                <tr class="border-b border-border/50">
-                  <td class="text-center py-2 px-4 text-muted">4</td>
-                  <td class="text-right py-2 px-4">1.9994</td>
-                  <td class="text-right py-2 px-4">1.0000</td>
-                  <td class="text-right py-2 px-4">0.9999</td>
-                </tr>
-                <tr class="border-b border-border/50">
-                  <td class="text-center py-2 px-4 text-muted">5</td>
-                  <td class="text-right py-2 px-4 text-green-400">2.0001</td>
-                  <td class="text-right py-2 px-4 text-green-400">1.0001</td>
-                  <td class="text-right py-2 px-4 text-green-400">1.0001</td>
-                </tr>
+                {#each [
+                  [0, '0.0000', '0.0000', '0.0000', '—'],
+                  [1, '1.8333', '1.2381', '1.0619', '100.00'],
+                  [2, '2.0690', '1.0020', '1.0146', '23.56'],
+                  [3, '2.0015', '0.9984', '1.0003', '3.37'],
+                  [4, '1.9994', '1.0000', '0.9999', '0.16'],
+                  [5, '2.0001', '1.0001', '1.0001', '0.04'],
+                ] as row}
+                  <tr class="border-b border-border/50 {row[0] === 5 ? 'bg-green-500/10' : ''}">
+                    <td class="text-center py-2 px-4 text-muted">{row[0]}</td>
+                    <td class="text-right py-2 px-4 {row[0] === 5 ? 'text-green-400' : 'text-tertiary'}">{row[1]}</td>
+                    <td class="text-right py-2 px-4 {row[0] === 5 ? 'text-green-400' : 'text-tertiary'}">{row[2]}</td>
+                    <td class="text-right py-2 px-4 {row[0] === 5 ? 'text-green-400' : 'text-tertiary'}">{row[3]}</td>
+                    <td class="text-right py-2 px-4 {row[4] === '—' ? 'text-muted' : parseFloat(row[4] as string) < 1 ? 'text-green-400' : 'text-yellow-400'}">{row[4]}</td>
+                  </tr>
+                {/each}
               </tbody>
             </table>
           </div>
